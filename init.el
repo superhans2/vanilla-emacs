@@ -67,9 +67,12 @@
 ;; not sure what visible-bell does, i have it disabled 
 (setq visible-bell nil)
 
+;; Load the theme of your choice.
+(load-theme 'modus-vivendi)
 
-
-
+;; Optionally define a key to switch between Modus themes.  Also check
+;; the user option `modus-themes-to-toggle'.
+(define-key global-map (kbd "<f5>") #'modus-themes-toggle)
 
 
 ;; essential configuration
@@ -147,10 +150,11 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(org-agenda-files '("/home/alex/org/journal/2023-10-02.org"))
- '(package-selected-packages '(olivetti ## org-journal)))
+ '(package-selected-packages '(olivetti ## org-journal))
+ '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(default ((t (:family "JetBrains Mono" :foundry "JB" :slant normal :weight light :height 128 :width normal)))))
