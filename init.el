@@ -276,10 +276,15 @@
 	org-journal-file-format "%Y-%m-%d.org"
 	org-journal-enable-agenda-integration t
 	org-extend-today-until 4
-	org-journal-date-format "%a, %Y-%m-%d"))
+	org-journal-date-format "%a, %Y-%m-%d")
+  :general
+  (baz/leader-keys
+  "nj" '(org-journal-new-entry :wk "create new entry")))
 
 (use-package magit
   :ensure t
+  :config
+  (setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
   :general
   (baz/leader-keys
     "gg" '(magit-status :wk "magit status")))
