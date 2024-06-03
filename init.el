@@ -21,13 +21,21 @@
 			 ("elpa" . "https://elpa.gnu.org/packages/")))
 
 (package-initialize)
-;; (unless package-archive-contents
-;;   (package-refresh-contents))
+(unless package-archive-contents
+  (package-refresh-contents))
+
+
 
 ;; Initialize use-package on non-Linux platforms
 (unless (package-installed-p 'use-package)
    (package-install 'use-package))
 (require 'use-package)
+
+;; APPEARANCE
+(defvar baz/default-font-size 220)
+(set-face-attribute 'default nil :font "JetBrains Mono" :height baz/default-font-size)
+(set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :height baz/default-font-size)
+(set-face-attribute 'variable-pitch nil :font "JetBrains Mono" :height baz/default-font-size :weight 'regular)
 
 (use-package which-key
   :ensure t
@@ -36,61 +44,24 @@
   :config
   (setq which-key-idle-delay 0.3))
 
-
-(use-package olivetti
-  :config
-  (setq body-width-default 1.0)
-  (setq olivetti-body-width body-width-default))
-
-(add-hook 'olivetti-mode-on-hook (lambda () (olivetti-set-width body-width-default)))
-(add-hook 'org-mode-hook #'olivetti-mode)
-
+;; MISC
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
-
 ;; Thanks, but no thanks
 (setq inhibit-startup-message t)
-
 (scroll-bar-mode -1)        ; Disable visible scrollbar
 (tool-bar-mode -1)          ; Disable the toolbar
 (tooltip-mode -1)           ; Disable tooltips
 (menu-bar-mode -1)            ; Disable the menu bar
-;; not sure what visible-bell does, i have it disabled 
+;; not sure what visible-bell does, i have it disabled
 (setq visible-bell nil)
-
 ;; Load the theme of your choice.
 (load-theme 'modus-vivendi)
-
 ;; Optionally define a key to switch between Modus themes.  Also check
 ;; the user option `modus-themes-to-toggle'.
 (define-key global-map (kbd "<f5>") #'modus-themes-toggle)
 
 
-;; essential configuration
-(use-package org-journal
-  :ensure t
-  :defer t
-  :config
-  (setq org-journal-dir "~/org/journal/"
-	org-journal-file-type 'weekly
-	org-journal-file-format "%Y-%m-%d.org"
-	org-journal-enable-agenda-integration t
-	org-extend-today-until 4
-	org-journal-date-format "%a, %Y-%m-%d"))
-
-
-(defun dw/evil-hook ()
-  (dolist (mode '(custom-mode
-		  eshell-mode
-		  git-rebase-mode
-		  erc-mode
-		  circe-server-mode
-		  circe-chat-mode
-		  circe-query-mode
-		  sauron-mode
-		  term-mode))
-  (add-to-list 'evil-emacs-state-modes mode)))
-
-
+;; KEYBINDING MANAGERS
 (use-package evil
   :ensure t
   :init
@@ -99,9 +70,8 @@
   (setq evil-want-C-u-scroll t)
   (setq evil-want-C-i-jump nil)
   (setq evil-respect-visual-line-mode t)
-  (setq evil-undo-system 'undo-tree)
+  ;;(setq evil-undo-system 'undo-tree)
   :config
-  (add-hook 'evil-mode-hook 'dw/evil-hook)
   (evil-mode 1)
   (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
   (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
@@ -113,27 +83,134 @@
   (evil-set-initial-state 'messages-buffer-mode 'normal)
   (evil-set-initial-state 'dashboard-mode 'normal))
 
-(use-package evil-collection
-  :ensure t
+(use-package evil-collection ;; evilifies a bunch of things
   :after evil
   :init
-  (setq evil-collection-company-use-tng nil)  ;; Is this a bug in evil-collection?
-  :custom
-  (evil-collection-outline-bind-tab-p nil)
+  (setq evil-collection-outline-bind-tab-p t) ;; '<TAB>' cycles visibility in 'outline-minor-mode'
+  ;; If I want to incrementally enable evil-collection mode-by-mode, I can do something like the following:
+  ;; (setq evil-collection-mode-list nil) ;; I don't like surprises
+  ;; (add-to-list 'evil-collection-mode-list 'magit) ;; evilify magit
+  ;; (add-to-list 'evil-collection-mode-list '(pdf pdf-view)) ;; evilify pdf-view
   :config
-  (setq evil-collection-mode-list
-	(remove 'lispy evil-collection-mode-list))
   (evil-collection-init))
 
+(use-package general
+  :ensure t
+  :demand t
+  :config
+  (general-evil-setup)
+  ;; integrate general with evil
 
-;; Uncomment this to get a reading on packages that get loaded at startup
+  ;; set up 'SPC' as the global leader key
+  (general-create-definer baz/leader-keys
+    :states '(normal insert visual emacs)
+    :keymaps 'override
+    :prefix "SPC" ;; set leader
+    :global-prefix "M-SPC") ;; access leader in insert mode
+
+  ;; set up ',' as the local leader key
+  (general-create-definer baz/local-leader-keys
+    :states '(normal insert visual emacs)
+    :keymaps 'override
+    :prefix "," ;; set local leader
+    :global-prefix "M-,") ;; access local leader in insert mode
+
+  ;; unbind some annoying default bindings
+  (general-unbind
+    "<mouse-2>") ;; pasting with mouse wheel click
+
+  (baz/leader-keys
+    "SPC" '(execute-extended-command :wk "execute command") ;; an alternative to 'M-x'
+    "TAB" '(:keymap tab-prefix-map :wk "tab")) ;; remap tab bindings
+
+  (baz/leader-keys
+    "w" '(:keymap evil-window-map :wk "window")) ;; window bindings
+
+  (baz/leader-keys
+    "s" '(:ignore t :wk "search"))
+
+  (baz/leader-keys
+    "c" '(:ignore t :wk "code"))
+
+  ;; help
+  ;; namespace mostly used by 'helpful'
+  (baz/leader-keys
+    "h" '(:ignore t :wk "help"))
+
+  ;; file
+  (baz/leader-keys
+    "f" '(:ignore t :wk "file")
+    "ff" '(find-file :wk "find file") ;; gets overridden by consult
+    "fs" '(save-buffer :wk "save file"))
+
+  ;; buffer
+  ;; see 'bufler' and 'popper'
+  (baz/leader-keys
+    "b" '(:ignore t :wk "buffer")
+    "bb" '(switch-to-buffer :wk "switch buffer") ;; gets overridden by consult
+    "bk" '(kill-this-buffer :wk "kill this buffer")
+    "br" '(revert-buffer :wk "reload buffer"))
+
+  ;; bookmark
+  (baz/leader-keys
+    "B" '(:ignore t :wk "bookmark")
+    "Bs" '(bookmark-set :wk "set bookmark")
+    "Bj" '(bookmark-jump :wk "jump to bookmark"))
+
+  ;; universal argument
+  (baz/leader-keys
+    "u" '(universal-argument :wk "universal prefix"))
+
+  ;; notes
+  ;; see 'citar' and 'org-roam'
+  (baz/leader-keys
+    "n" '(:ignore t :wk "notes")
+    ;; see org-roam and citar sections
+    "na" '(org-todo-list :wk "agenda todos")) ;; agenda
+
+  ;; code
+  ;; see 'flymake'
+  (baz/leader-keys
+    "c" '(:ignore t :wk "code"))
+
+  ;; org capture
+  (baz/leader-keys
+    "x" '(org-capture :wk "capture"))
+
+  ;; buffer list
+  (baz/leader-keys
+    "," '(switch-to-buffer :wk "switch buffer"))
+
+  ;; open
+  (baz/leader-keys
+    "o" '(:ignore t :wk "open")
+    "os" '(speedbar t :wk "speedbar")) ;; TODO this needs some love
+
+  ;; search
+  ;; see 'consult'
+  (baz/leader-keys
+    "s" '(:ignore t :wk "search"))
+
+  ;; templating
+  ;; see 'tempel'
+  (baz/leader-keys
+    "t" '(:ignore t :wk "template")))
+
+;; (use-package hydra
+;;   :straight (:build t)
+;;   :defer t)
+
+
 ;;(setq use-package-verbose t)
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
-;; configuration taken from prelude configuration 
+;; configuration taken from prelude configuration
 (keymap-global-set "C-c j" 'org-journal-new-entry)
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
+
+
+;; COMPLETION FRAMEWORK
 (use-package vertico
   :ensure t
   :bind (:map vertico-map
@@ -147,48 +224,38 @@
   :init
   (vertico-mode))
 
+
 ;; Persist history over Emacs restarts. Vertico sorts by history position.
 (use-package savehist
   :init
   (savehist-mode))
 
-
-(use-package marginalia
-  :after vertico
+(use-package consult
+  :demand t
   :ensure t
-  :custom
-  (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
-  :init
-  (marginalia-mode))
+  :general
+  (baz/leader-keys
+    "bb" '(consult-buffer :wk "consult buffer")
+    "Bb" '(consult-bookmark :wk "consult bookmark")
+    ;; "ht" '(consult-theme :wk "consult theme")
+    "sr" '(consult-ripgrep :wk "consult rg")
+    "sg" '(consult-grep :wk "consult grep")
+    "sG" '(consult-git-grep :wk "consult git grep")
+    "sf" '(consult-find :wk "consult find")
+    "sF" '(consult-locate :wk "consult locate")
+    "sl" '(consult-line :wk "consult line")
+    "sy" '(consult-yank-from-kill-ring :wk "consult yank from kill ring")
+    "i" '(consult-imenu :wk "consult imenu"))
+  :config
+  ;; use project.el to retrieve the project root
+  ;; (set consult-project-root-function
+  ;;       (lambda ()
+  ;;         (when-let (project (project-current))
+  ;;           (car (project-roots project)))))
+  )
 
-(use-package hydra)
 
-(defhydra hydra-text-scale (:timeout 4)
-  "scale text"
-  ("j" text-scale-increase "in")
-  ("k" text-scale-decrease "out"))
-
-(use-package doom-modeline
-  :ensure t
-  :init (doom-modeline-mode 1))
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(menu-bar-mode nil)
- '(org-agenda-files '("/home/alex/org/journal/2024-03-04.org"))
- '(package-selected-packages
-   '(which-key vertico undo-tree perspective org-journal olivetti marginalia hydra evil-collection doom-modeline))
- '(tool-bar-mode nil))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:family "Source Code Pro" :foundry "ADBO" :slant normal :weight regular :height 158 :width normal)))))
-
+;; NAVIGATION
 (use-package perspective
   :ensure t  ; use `:straight t` if using straight.el!
   :bind
@@ -197,3 +264,38 @@
   (persp-mode-prefix-key (kbd "C-x x"))
   :init
   (persp-mode))
+
+
+;; ESSENTIAL TOOLS
+(use-package org-journal
+  :ensure t
+  :defer t
+  :config
+  (setq org-journal-dir "~/org/journal/"
+	org-journal-file-type 'weekly
+	org-journal-file-format "%Y-%m-%d.org"
+	org-journal-enable-agenda-integration t
+	org-extend-today-until 4
+	org-journal-date-format "%a, %Y-%m-%d"))
+
+(use-package magit
+  :ensure t
+  :general
+  (baz/leader-keys
+    "gg" '(magit-status :wk "magit status")))
+
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(org-agenda-files '("/home/alex/org/journal/2024-06-03.org"))
+ '(package-selected-packages
+   '(magit consult general which-key vertico undo-tree perspective org-journal olivetti marginalia hydra evil-collection doom-modeline)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
