@@ -102,9 +102,8 @@
   :init
   (setq evil-collection-outline-bind-tab-p t) ;; '<TAB>' cycles visibility in 'outline-minor-mode'
   ;; If I want to incrementally enable evil-collection mode-by-mode, I can do something like the following:
-  ;; (setq evil-collection-mode-list nil) ;; I don't like surprises
-  ;; (add-to-list 'evil-collection-mode-list 'magit) ;; evilify magit
-  ;; (add-to-list 'evil-collection-mode-list '(pdf pdf-view)) ;; evilify pdf-view
+  (setq evil-collection-mode-list nil) ;; I don't like surprises
+  (add-to-list 'evil-collection-mode-list 'magit) ;; evilify magit
   :config
   (evil-collection-init))
 
