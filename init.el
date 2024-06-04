@@ -37,6 +37,16 @@
 (set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :height baz/default-font-size)
 (set-face-attribute 'variable-pitch nil :font "JetBrains Mono" :height baz/default-font-size :weight 'regular)
 
+(load-theme 'modus-vivendi)
+(define-key global-map (kbd "<f5>") #'modus-themes-toggle)
+
+(use-package olivetti
+  :demand t
+  :init
+  (setq olivetti-body-width 80)
+  (setq olivetti-style 'fancy)
+  (setq olivetti-minimum-body-width 50))
+
 (use-package which-key
   :ensure t
   :init (which-key-mode)
@@ -44,21 +54,22 @@
   :config
   (setq which-key-idle-delay 0.3))
 
-;; MISC
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
-;; Thanks, but no thanks
-(setq inhibit-startup-message t)
-(scroll-bar-mode -1)        ; Disable visible scrollbar
-(tool-bar-mode -1)          ; Disable the toolbar
-(tooltip-mode -1)           ; Disable tooltips
-(menu-bar-mode -1)            ; Disable the menu bar
-;; not sure what visible-bell does, i have it disabled
-(setq visible-bell nil)
-;; Load the theme of your choice.
-(load-theme 'modus-vivendi)
-;; Optionally define a key to switch between Modus themes.  Also check
-;; the user option `modus-themes-to-toggle'.
-(define-key global-map (kbd "<f5>") #'modus-themes-toggle)
+;; MISC 
+(use-package emacs
+  :demand t
+  :ensure nil
+  :init
+  (setq user-full-name "Alex H")
+  (setq user-mail-address "ashughes001@gmail.com")
+  (defalias 'yes-or-no-p 'y-or-n-p)
+  (setq inhibit-startup-message t)
+  (scroll-bar-mode -1)        
+  (tool-bar-mode -1)          
+  (tooltip-mode -1)          
+  (menu-bar-mode -1)        
+  (setq visible-bell nil)
+  (add-to-list 'default-frame-alist '(fullscreen . maximized))
+)
 
 
 ;; KEYBINDING MANAGERS
@@ -186,19 +197,25 @@
     "o" '(:ignore t :wk "open")
     "os" '(speedbar t :wk "speedbar")) ;; TODO this needs some love
 
+  ;; toggle
+  (baz/leader-keys
+    "t" '(:ignore t :wk "toggle")
+    "tt" '(tab-bar-mode :wk "toggle tab bar mode")
+    "to" '(olivetti-mode :wk "toggle olivetti mode")) 
+
   ;; search
   ;; see 'consult'
   (baz/leader-keys
     "s" '(:ignore t :wk "search"))
 
+  ;; open
+  (baz/leader-keys
+    "o-" '(dired-jump :wk "open in dired")) 
+
   ;; templating
   ;; see 'tempel'
   (baz/leader-keys
     "t" '(:ignore t :wk "template")))
-
-;; (use-package hydra
-;;   :straight (:build t)
-;;   :defer t)
 
 
 ;;(setq use-package-verbose t)
@@ -266,7 +283,50 @@
   (persp-mode))
 
 
-;; ESSENTIAL TOOLS
+;; ESSENTIAL TOOLS 
+(use-package org
+  :ensure t
+  :demand t
+  :init
+
+  ;; todo setup
+  (setq org-todo-keywords
+        '((sequence "TODO" "NEXT" "SOMEDAY" "|" "DONE(d)" "CANCELLED")
+	  (sequence "PROJ" "|" "COMPLETED")))
+
+  (setq org-adapt-indentation nil)   ;; interacts poorly with 'evil-open-below'
+
+  :general
+  (baz/local-leader-keys
+        :keymaps 'org-mode-map
+        "a" '(org-archive-subtree :wk "archive")
+        "l" '(:ignore t :wk "link")
+        "ll" '(org-insert-link t :wk "link")
+        "lp" '(org-latex-preview t :wk "prev latex")
+        "h" '(consult-org-heading :wk "consult heading")
+        "d" '(org-cut-special :wk "org cut special")
+        "y" '(org-copy-special :wk "org copy special")
+        "p" '(org-paste-special :wk "org paste special")
+        "b" '(:keymap org-babel-map :wk "babel")
+        "t" '(org-todo :wk "todo")
+        "s" '(org-insert-structure-template :wk "template")
+        "e" '(org-edit-special :wk "edit")
+        "i" '(:ignore t :wk "insert")
+        "ih" '(org-insert-heading :wk "insert heading")
+        "is" '(org-insert-subheading :wk "insert heading")
+        "f" '(org-footnote-action :wk "footnote action")
+        ">" '(org-demote-subtree :wk "demote subtree")
+        "<" '(org-promote-subtree :wk "demote subtree"))
+
+  :hook
+  (org-mode . olivetti-mode)
+  (org-mode . variable-pitch-mode)
+
+  :config
+  ;; set up org paths
+  (setq org-directory "c:/Users/HughesDavA/Documents/org/")
+  (setq org-default-notes-file (concat org-directory "/todo.org")))
+
 (use-package org-journal
   :ensure t
   :defer t
@@ -287,6 +347,7 @@
   (setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
   :general
   (baz/leader-keys
+    "g" '(:ignore t :wk "git")
     "gg" '(magit-status :wk "magit status")))
 
 
