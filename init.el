@@ -59,6 +59,10 @@
 ;; Optionally define a key to switch between Modus themes.  Also check
 ;; the user option `modus-themes-to-toggle'.
 (define-key global-map (kbd "<f5>") #'modus-themes-toggle)
+(setq org-directory (concat (getenv "HOME") "/org")
+      org-notes (concat org-directory "/ZK")
+      zot-bib (concat (getenv "HOME") "/Documents/zotLib.bib")
+      org-roam-directory org-notes)
 
 
 ;; KEYBINDING MANAGERS
@@ -195,10 +199,6 @@
   ;; see 'tempel'
   (baz/leader-keys
     "t" '(:ignore t :wk "template")))
-
-;; (use-package hydra
-;;   :straight (:build t)
-;;   :defer t)
 
 
 ;;(setq use-package-verbose t)
