@@ -59,8 +59,6 @@
   :demand t
   :ensure nil
   :init
-  (setq user-full-name "Alex H")
-  (setq user-mail-address "ashughes001@gmail.com")
   (defalias 'yes-or-no-p 'y-or-n-p)
   (setq inhibit-startup-message t)
   (scroll-bar-mode -1)        
