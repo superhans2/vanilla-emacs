@@ -54,6 +54,9 @@
   :config
   (setq which-key-idle-delay 0.3))
 
+;; VARIABLES
+(defvar baz/org-path "c:/Users/HughesDavA/Documents/org/")
+
 ;; MISC 
 (use-package emacs
   :demand t
@@ -329,8 +332,8 @@
   :ensure t
   :defer t
   :config
-  (setq org-journal-dir "~/org/journal/"
-	org-journal-file-type 'weekly
+  (setq org-journal-dir (concat baz/org-path)
+	org-journal-file-type 'yearly
 	org-journal-file-format "%Y-%m-%d.org"
 	org-journal-enable-agenda-integration t
 	org-extend-today-until 4
@@ -343,6 +346,7 @@
   :ensure t
   :config
   (setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
+  (setq magit-git-executable "c:/Program Files/Git/bin/git")
   :general
   (baz/leader-keys
     "g" '(:ignore t :wk "git")
@@ -354,7 +358,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-agenda-files '("/home/alex/org/journal/2024-06-03.org"))
+ '(org-agenda-files
+   '("c:/home/alex/org/journal/2024-06-03.org" "c:/Users/HughesDavA/Documents/org/2024-01-01.org"))
  '(package-selected-packages
    '(magit consult general which-key vertico undo-tree perspective org-journal olivetti marginalia hydra evil-collection doom-modeline)))
 (custom-set-faces
