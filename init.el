@@ -102,8 +102,8 @@
   :init
   (setq evil-collection-outline-bind-tab-p t) ;; '<TAB>' cycles visibility in 'outline-minor-mode'
   ;; If I want to incrementally enable evil-collection mode-by-mode, I can do something like the following:
-  (setq evil-collection-mode-list nil) ;; I don't like surprises
-  (add-to-list 'evil-collection-mode-list 'magit) ;; evilify magit
+  ;; (setq evil-collection-mode-list nil) ;; I don't like surprises
+  ;; (add-to-list 'evil-collection-mode-list 'magit) ;; evilify magit
   :config
   (evil-collection-init))
 
@@ -189,6 +189,9 @@
   ;; org capture
   (baz/leader-keys
     "x" '(org-capture :wk "capture"))
+
+  (baz/leader-keys
+    "." '(find-file :wk "switch buffer"))
 
   ;; buffer list
   (baz/leader-keys
