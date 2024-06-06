@@ -137,7 +137,9 @@
     "TAB" '(:keymap tab-prefix-map :wk "tab")) ;; remap tab bindings
 
   (baz/leader-keys
-    "w" '(:keymap evil-window-map :wk "window")) ;; window bindings
+    "w" '(:keymap evil-window-map :wk "window")
+    "wu" '(winner-undo :wk "winner-undo")
+    "wU" '(winner-redo :wk "winner-redo")) ;; window bindings
 
   (baz/leader-keys
     "s" '(:ignore t :wk "search"))
@@ -220,12 +222,6 @@
   (baz/leader-keys
     "t" '(:ignore t :wk "template")))
 
-
-;;(setq use-package-verbose t)
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-
-;; configuration taken from prelude configuration
-(keymap-global-set "C-c j" 'org-journal-new-entry)
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
 
 
@@ -266,6 +262,10 @@
     "sl" '(consult-line :wk "consult line")
     "sy" '(consult-yank-from-kill-ring :wk "consult yank from kill ring")
     "i" '(consult-imenu :wk "consult imenu")))
+
+
+;; NAVIGATION
+(winner-mode)
 
 
 
@@ -340,7 +340,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-agenda-files '("/home/alex/org/journal/2024-06-03.org")))
+ '(org-agenda-files '("/home/alex/org/journal/2024-06-03.org"))
+ '(package-selected-packages
+   '(which-key vertico undo-tree treeview treemacs perspective org-journal olivetti marginalia magit lispy general evil-collection doom-modeline consult)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
