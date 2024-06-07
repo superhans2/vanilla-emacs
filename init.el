@@ -227,8 +227,8 @@
 
 (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
 
-;; (global-set-key (kbd "<TAB>-o") 'tab-next)
-;; (global-set-key (kbd "TAB-2") 'tab-previous)
+(global-set-key (kbd "M-2") 'tab-next)
+(global-set-key (kbd "M-1") 'tab-previous)
 
 
 
