@@ -149,6 +149,14 @@
   (baz/leader-keys
     "c" '(:ignore t :wk "code"))
 
+
+  (baz/local-leader-keys
+        :keymaps 'emacs-lisp-mode-map
+        "h" '(hs-hide-all :wk "hide all")
+	"," '(hs-toggle-hiding :wk "toggle code block")
+	"o" '(hs-show-block :wk "show block")
+	"O" '(hs-hide-block :wk "hide block"))
+
   ;; help
   ;; namespace mostly used by 'helpful'
   (baz/leader-keys
@@ -225,7 +233,7 @@
   (baz/leader-keys
     "t" '(:ignore t :wk "template")))
 
-(define-key key-translation-map (kbd "ESC") (kbd "C-g"))
+;; (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
 
 (global-set-key (kbd "M-2") 'tab-next)
 (global-set-key (kbd "M-1") 'tab-previous)
@@ -346,6 +354,12 @@
   (baz/leader-keys
     "g" '(:ignore t :wk "git")
     "gg" '(magit-status :wk "magit status")))
+
+
+;; CODE
+(add-hook 'emacs-lisp-mode-hook
+	  (lambda ()
+	    (hs-minor-mode)))
 
 
 ;; if in windows this will overwrite variables 
