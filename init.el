@@ -222,8 +222,7 @@
   (baz/leader-keys
     "t" '(:ignore t :wk "template")))
 
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-
+(define-key key-translation-map (kbd "ESC") (kbd "C-g"))
 
 
 ;; COMPLETION FRAMEWORK
