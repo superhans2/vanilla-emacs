@@ -211,6 +211,7 @@
   (baz/leader-keys
     "t" '(:ignore t :wk "toggle")
     "tt" '(tab-bar-mode :wk "toggle tab bar mode")
+    "td" '(baz/toggle-dired-details :wk "toggle details in dired")
     "tv" '(visual-line-mode :wk "visual line mode")
     "to" '(olivetti-mode :wk "toggle olivetti mode")) 
 
@@ -225,6 +226,10 @@
     "t" '(:ignore t :wk "template")))
 
 (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
+
+;; (global-set-key (kbd "<TAB>-o") 'tab-next)
+;; (global-set-key (kbd "TAB-2") 'tab-previous)
+
 
 
 ;; COMPLETION FRAMEWORK
@@ -272,6 +277,15 @@
 
 
 ;; ESSENTIAL TOOLS 
+(defvar dired-details-enabled t)
+(defun baz/toggle-dired-details()
+  (if dired-details-enabled
+      (setq dired-details-enabled '())
+    (setq dired-details-enabled t)))
+(add-hook 'dired-mode-hook
+	  (lambda ()
+	    (dired-hide-details-mode)))
+
 (use-package org
   :ensure t
   :demand t
