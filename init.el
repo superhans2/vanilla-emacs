@@ -266,6 +266,7 @@
 
 ;; NAVIGATION
 (winner-mode)
+(tab-bar-mode)  ;; TAB BAR MODE on by default 
 
 
 
