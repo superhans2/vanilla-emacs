@@ -61,6 +61,8 @@
   :init
   (defalias 'yes-or-no-p 'y-or-n-p)
   (setq inhibit-startup-message t)
+  (setq make-backup-files nil)
+  (auto-save-mode -1)
   (scroll-bar-mode -1)        
   (tool-bar-mode -1)          
   (tooltip-mode -1)          
