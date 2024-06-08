@@ -293,11 +293,12 @@
 (add-hook 'dired-mode-hook
 	  (lambda ()
 	    (dired-hide-details-mode)))
-
 (use-package org
   :ensure t
   :demand t
   :init
+  (setq org-auto-align-tags nil
+        org-tags-column 0)
 
   ;; todo setup
   (setq org-todo-keywords
