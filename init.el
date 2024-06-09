@@ -46,6 +46,7 @@
   (setq olivetti-body-width 80)
   (setq olivetti-style 'fancy)
   (setq olivetti-minimum-body-width 50))
+(setq-default line-spacing 4)
 
 (use-package which-key
   :ensure t
