@@ -39,13 +39,6 @@
   (setq olivetti-minimum-body-width 50))
 (setq-default line-spacing 4)
 
-(use-package which-key
-  :ensure t
-  :init (which-key-mode)
-  :diminish which-key-mode
-  :config
-  (setq which-key-idle-delay 0.3))
-
 ;; MISC 
 (use-package emacs
   :demand t
@@ -62,14 +55,18 @@
   (setq visible-bell nil)
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
 )
-
 (setq org-directory (concat (getenv "HOME") "/org")
       org-notes (concat org-directory "/ZK")
       zot-bib (concat (getenv "HOME") "/Documents/zotLib.bib")
       org-roam-directory org-notes)
 
-
 ;; KEYBINDING MANAGERS
+(use-package which-key
+  :ensure t
+  :init (which-key-mode)
+  :diminish which-key-mode
+  :config
+  (setq which-key-idle-delay 0.3))
 (use-package evil
   :ensure t
   :init
@@ -90,7 +87,6 @@
 
   (evil-set-initial-state 'messages-buffer-mode 'normal)
   (evil-set-initial-state 'dashboard-mode 'normal))
-
 (use-package evil-collection ;; evilifies a bunch of things
   :after evil
   :init
@@ -100,7 +96,6 @@
   ;; (add-to-list 'evil-collection-mode-list 'magit) ;; evilify magit
   :config
   (evil-collection-init))
-
 (use-package general
   :ensure t
   :demand t
@@ -229,13 +224,9 @@
   ;; see 'tempel'
   (baz/leader-keys
     "t" '(:ignore t :wk "template")))
-
 ;; (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
-
 (global-set-key (kbd "M-2") 'tab-next)
 (global-set-key (kbd "M-1") 'tab-previous)
-
-
 
 ;; COMPLETION FRAMEWORK
 (use-package vertico
@@ -250,13 +241,12 @@
   (vertico-cycle t)
   :init
   (vertico-mode))
-
-
+(use-package corfu
+  :hook (prog-mode . corfu-mode))
 ;; Persist history over Emacs restarts. Vertico sorts by history position.
 (use-package savehist
   :init
   (savehist-mode))
-
 (use-package consult
   :demand t
   :ensure t
@@ -273,14 +263,22 @@
     "sl" '(consult-line :wk "consult line")
     "sy" '(consult-yank-from-kill-ring :wk "consult yank from kill ring")
     "i" '(consult-imenu :wk "consult imenu")))
+(use-package orderless
+  :ensure t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
+(use-package marginalia
+  :init
+  (marginalia-mode)
+  :bind (:map minibuffer-local-map
+              ("M-A" . marginalia-cycle)))
 
 ;; NAVIGATION
 ;; using hydra to chain 
 ;; todo open new bookmark with a newtab
 ;; Add custom keybindings within the tab-prefix-map
 (define-key tab-prefix-map (kbd "n") 'baz/open-new-tab)
-
-
 (define-key tab-prefix-map (kbd "2") 'tab-duplicate)
 (defun baz/open-new-tab ()
   (interactive)
@@ -290,8 +288,6 @@
     (call-interactively 'bookmark-bmenu-list)))   
 (winner-mode)
 (tab-bar-mode)  ;; TAB BAR MODE on by default 
-
-
 
 ;; ESSENTIAL TOOLS 
 (defvar dired-details-enabled t)
@@ -340,7 +336,6 @@
   :hook
   (org-mode . olivetti-mode)
   (org-mode . variable-pitch-mode))
-
 (use-package org-journal
   :ensure t
   :defer t
@@ -355,7 +350,6 @@
   :general
   (baz/leader-keys
   "nj" '(org-journal-new-entry :wk "create new entry")))
-
 (use-package magit
   :ensure t
   :config
@@ -365,16 +359,14 @@
     "g" '(:ignore t :wk "git")
     "gg" '(magit-status :wk "magit status")))
 
-
 ;; CODE
 (add-hook 'emacs-lisp-mode-hook
 	  (lambda ()
 	    (hs-minor-mode)))
-
+(add-hook 'prog-mode-hook #'display-line-numbers-mode)
 
 ;; if in windows this will overwrite variables 
 ;; (load "windows-specific.el")
-
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -382,10 +374,27 @@
  ;; If there is more than one, they won't work right.
  '(org-agenda-files '("/home/alex/org/journal/2024-06-03.org"))
  '(package-selected-packages
-   '(which-key vertico undo-tree treeview treemacs perspective org-journal olivetti marginalia magit lispy general evil-collection doom-modeline consult)))
+   '(spacious-padding which-key vertico undo-tree treeview treemacs perspective org-journal olivetti marginalia magit lispy general evil-collection doom-modeline consult)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(fringe ((t :background "#000000")))
+ '(header-line ((t :box (:line-width 4 :color "#212121" :style nil))))
+ '(header-line-highlight ((t :box (:color "#ffffff"))))
+ '(keycast-key ((t)))
+ '(line-number ((t :background "#000000")))
+ '(mode-line ((t :box (:line-width 6 :color "#323232" :style nil))))
+ '(mode-line-active ((t :box (:line-width 6 :color "#323232" :style nil))))
+ '(mode-line-highlight ((t :box (:color "#ffffff"))))
+ '(mode-line-inactive ((t :box (:line-width 6 :color "#1e1e1e" :style nil))))
+ '(tab-bar-tab ((t :box (:line-width 4 :color "#0e0e0e" :style nil))))
+ '(tab-bar-tab-inactive ((t :box (:line-width 4 :color "#424242" :style nil))))
+ '(tab-line-tab ((t)))
+ '(tab-line-tab-active ((t)))
+ '(tab-line-tab-inactive ((t)))
+ '(vertical-border ((t :background "#000000" :foreground "#000000")))
+ '(window-divider ((t (:background "#000000" :foreground "#000000"))))
+ '(window-divider-first-pixel ((t (:background "#000000" :foreground "#000000"))))
+ '(window-divider-last-pixel ((t (:background "#000000" :foreground "#000000")))))
