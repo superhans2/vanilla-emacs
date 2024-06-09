@@ -281,9 +281,15 @@
     "sl" '(consult-line :wk "consult line")
     "sy" '(consult-yank-from-kill-ring :wk "consult yank from kill ring")
     "i" '(consult-imenu :wk "consult imenu")))
-
+(defun baz/open-new-tab ()
+  (progn
+    (scratch-buffer)
+    (call-interactively 'bookmark-bmenu-list)))   
 
 ;; NAVIGATION
+;; using hydra to chain 
+;; todo open new bookmark with a newtab
+
 (winner-mode)
 (tab-bar-mode)  ;; TAB BAR MODE on by default 
 
