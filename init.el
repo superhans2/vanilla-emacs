@@ -281,15 +281,21 @@
     "sl" '(consult-line :wk "consult line")
     "sy" '(consult-yank-from-kill-ring :wk "consult yank from kill ring")
     "i" '(consult-imenu :wk "consult imenu")))
-(defun baz/open-new-tab ()
-  (progn
-    (scratch-buffer)
-    (call-interactively 'bookmark-bmenu-list)))   
 
 ;; NAVIGATION
 ;; using hydra to chain 
 ;; todo open new bookmark with a newtab
+;; Add custom keybindings within the tab-prefix-map
+(define-key tab-prefix-map (kbd "n") 'baz/open-new-tab)
 
+
+(define-key tab-prefix-map (kbd "2") 'tab-duplicate)
+(defun baz/open-new-tab ()
+  (interactive)
+  (progn
+    (tab-new)
+    (scratch-buffer)
+    (call-interactively 'bookmark-bmenu-list)))   
 (winner-mode)
 (tab-bar-mode)  ;; TAB BAR MODE on by default 
 
