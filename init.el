@@ -160,6 +160,11 @@
   ;; help
   ;; namespace mostly used by 'helpful'
   (baz/leader-keys
+    "h" '(tab-previous :wk "tab previous"))
+  (baz/leader-keys
+    "l" '(tab-next :wk "tab next"))
+
+  (baz/leader-keys
     "h" '(:ignore t :wk "help"))
 
   ;; file
