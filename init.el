@@ -9,37 +9,28 @@
 			     (float-time
 			      (time-subtract after-init-time before-init-time)))
 		     gcs-done)))
-
-
-
 ;; Initialize package sources
 (require 'package)
-
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
 			 ("melpa-stable" . "https://stable.melpa.org/packages/")
 			 ("org" . "https://orgmode.org/elpa/")
 			 ("elpa" . "https://elpa.gnu.org/packages/")))
-
 (package-initialize)
 (unless package-archive-contents
   (package-refresh-contents))
-
-
-
 ;; Initialize use-package on non-Linux platforms
 (unless (package-installed-p 'use-package)
    (package-install 'use-package))
 (require 'use-package)
+
 
 ;; APPEARANCE
 (defvar baz/default-font-size 220)
 (set-face-attribute 'default nil :font "JetBrains Mono" :height baz/default-font-size)
 (set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :height baz/default-font-size)
 (set-face-attribute 'variable-pitch nil :font "JetBrains Mono" :height baz/default-font-size :weight 'regular)
-
 (load-theme 'modus-vivendi)
 (define-key global-map (kbd "<f5>") #'modus-themes-toggle)
-
 (use-package olivetti
   :demand t
   :init
