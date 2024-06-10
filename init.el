@@ -400,10 +400,14 @@
    "Journal"
    #'org-journal-open-current-journal-file))
 
+(setq evil-vsplit-window-right t)
 (defun baz/startup ()
   (progn
-    (tab-rename "Journal")
-    (org-journal-open-current-journal-file)))
+    (tab-rename "Org")
+    (org-journal-open-current-journal-file)
+    (evil-window-vsplit 40)
+    (other-window 1)
+    (find-file (concat org-directory "/inbox.org"))))
 
 ;; emacs startup hook
 (add-hook 'emacs-startup-hook 'baz/startup)
