@@ -374,11 +374,11 @@
   (add-hook 'after-init-hook #'global-flycheck-mode))
 
 ;; copying tab bar navigation code 
-(defhydra mmk2410/tab-bar ()
+(defhydra mmk2410/tab-bar (:color teal) 
   "My tab-bar helpers"
   ("j" mmk2410/tab-bar-run-journal "Org")
   ("i" baz/tab-bar-run-config "Config")
-  ("c" nil "cancel" :color blue))
+  ("c" nil "cancel"))
 
 (global-set-key (kbd "C-c f") 'mmk2410/tab-bar/body)
 
