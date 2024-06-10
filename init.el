@@ -1,15 +1,14 @@
 ;; following Systems Crafters config
 ;; The default is 800 kilobytes.  Measured in bytes.
 (setq gc-cons-threshold (* 50 1000 1000))
-;; Profile emacs startup
 (add-hook 'emacs-startup-hook
+	  ;; Profile emacs startup
 	  (lambda ()
 	    (message "*** Emacs loaded in %s with %d garbage collections."
 		     (format "%.2f seconds"
 			     (float-time
 			      (time-subtract after-init-time before-init-time)))
 		     gcs-done)))
-;; Initialize package sources
 (require 'package)
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
 			 ("melpa-stable" . "https://stable.melpa.org/packages/")
@@ -39,7 +38,7 @@
   (setq olivetti-minimum-body-width 50))
 (setq-default line-spacing 4)
 
-;; MISC 
+;; MISC
 (use-package emacs
   :demand t
   :ensure nil
