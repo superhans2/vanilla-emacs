@@ -349,7 +349,8 @@
 	org-journal-find-file #'find-file)
   :general
   (baz/leader-keys
-  "nj" '(org-journal-new-entry :wk "create new entry")))
+    "nj" '(org-journal-new-entry :wk "create new entry")
+    "ng" '(org-journal-open-current-journal-file :wk "go to current journal entry")))
 (use-package magit
   :ensure t
   :config
@@ -372,7 +373,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-agenda-files '("/home/alex/org/journal/2024-06-03.org"))
+ '(org-agenda-files '("/home/alex/org/journal/2024-06-10.org"))
  '(package-selected-packages
    '(spacious-padding which-key vertico undo-tree treeview treemacs perspective org-journal olivetti marginalia magit lispy general evil-collection doom-modeline consult)))
 (custom-set-faces
@@ -380,21 +381,4 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(fringe ((t :background "#000000")))
- '(header-line ((t :box (:line-width 4 :color "#212121" :style nil))))
- '(header-line-highlight ((t :box (:color "#ffffff"))))
- '(keycast-key ((t)))
- '(line-number ((t :background "#000000")))
- '(mode-line ((t :box (:line-width 6 :color "#323232" :style nil))))
- '(mode-line-active ((t :box (:line-width 6 :color "#323232" :style nil))))
- '(mode-line-highlight ((t :box (:color "#ffffff"))))
- '(mode-line-inactive ((t :box (:line-width 6 :color "#1e1e1e" :style nil))))
- '(tab-bar-tab ((t :box (:line-width 4 :color "#0e0e0e" :style nil))))
- '(tab-bar-tab-inactive ((t :box (:line-width 4 :color "#424242" :style nil))))
- '(tab-line-tab ((t)))
- '(tab-line-tab-active ((t)))
- '(tab-line-tab-inactive ((t)))
- '(vertical-border ((t :background "#000000" :foreground "#000000")))
- '(window-divider ((t (:background "#000000" :foreground "#000000"))))
- '(window-divider-first-pixel ((t (:background "#000000" :foreground "#000000"))))
- '(window-divider-last-pixel ((t (:background "#000000" :foreground "#000000")))))
+ )
