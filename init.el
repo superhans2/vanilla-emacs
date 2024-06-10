@@ -400,5 +400,11 @@
    "Journal"
    #'org-journal-open-current-journal-file))
 
+(defun baz/startup ()
+  (progn
+    (tab-rename "Journal")
+    (org-journal-open-current-journal-file)))
+
 ;; emacs startup hook
-(add-hook 'emacs-startup-hook 'mmk2410/tab-bar-run-journal)
+(add-hook 'emacs-startup-hook 'baz/startup)
+
