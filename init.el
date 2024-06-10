@@ -224,6 +224,7 @@
   ;; see 'tempel'
   (baz/leader-keys
     "t" '(:ignore t :wk "template")))
+(use-package hydra)
 ;; (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
 (global-set-key (kbd "M-2") 'tab-next)
 (global-set-key (kbd "M-1") 'tab-previous)
