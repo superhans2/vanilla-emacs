@@ -54,8 +54,6 @@
   :config
   (setq which-key-idle-delay 0.3))
 
-;; VARIABLES
-(defvar baz/org-path "c:/Users/HughesDavA/Documents/org/")
 
 ;; MISC 
 (use-package emacs
@@ -71,6 +69,11 @@
   (setq visible-bell nil)
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
 )
+
+(setq org-directory (concat (getenv "HOME") "/org")
+      org-notes (concat org-directory "/ZK")
+      zot-bib (concat (getenv "HOME") "/Documents/zotLib.bib")
+      org-roam-directory org-notes)
 
 
 ;; KEYBINDING MANAGERS
@@ -196,12 +199,14 @@
   ;; open
   (baz/leader-keys
     "o" '(:ignore t :wk "open")
+    "o-" '(dired-jump :wk "open in dired")
     "os" '(speedbar t :wk "speedbar")) ;; TODO this needs some love
 
   ;; toggle
   (baz/leader-keys
     "t" '(:ignore t :wk "toggle")
     "tt" '(tab-bar-mode :wk "toggle tab bar mode")
+    "tv" '(visual-line-mode :wk "visual line mode")
     "to" '(olivetti-mode :wk "toggle olivetti mode")) 
 
   ;; search
@@ -209,23 +214,13 @@
   (baz/leader-keys
     "s" '(:ignore t :wk "search"))
 
-  ;; open
-  (baz/leader-keys
-    "o-" '(dired-jump :wk "open in dired")) 
-
   ;; templating
   ;; see 'tempel'
   (baz/leader-keys
     "t" '(:ignore t :wk "template")))
 
 
-;;(setq use-package-verbose t)
 (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-
-;; configuration taken from prelude configuration
-(keymap-global-set "C-c j" 'org-journal-new-entry)
-(global-set-key (kbd "<escape>") 'keyboard-escape-quit)
-
 
 
 ;; COMPLETION FRAMEWORK
@@ -263,25 +258,8 @@
     "sF" '(consult-locate :wk "consult locate")
     "sl" '(consult-line :wk "consult line")
     "sy" '(consult-yank-from-kill-ring :wk "consult yank from kill ring")
-    "i" '(consult-imenu :wk "consult imenu"))
-  :config
-  ;; use project.el to retrieve the project root
-  ;; (set consult-project-root-function
-  ;;       (lambda ()
-  ;;         (when-let (project (project-current))
-  ;;           (car (project-roots project)))))
-  )
+    "i" '(consult-imenu :wk "consult imenu")))
 
-
-;; NAVIGATION
-(use-package perspective
-  :ensure t  ; use `:straight t` if using straight.el!
-  :bind
-  (("C-x C-b" . persp-list-buffers))
-  :custom
-  (persp-mode-prefix-key (kbd "C-x x"))
-  :init
-  (persp-mode))
 
 
 ;; ESSENTIAL TOOLS 
@@ -292,9 +270,8 @@
 
   ;; todo setup
   (setq org-todo-keywords
-        '((sequence "TODO" "NEXT" "SOMEDAY" "|" "DONE(d)" "CANCELLED")
+        '((sequence "TODO(t)" "NEXT(n)" "WAIT(w)" "|" "DONE(d)" "CANCELLED")
 	  (sequence "PROJ" "|" "COMPLETED")))
-
   (setq org-adapt-indentation nil)   ;; interacts poorly with 'evil-open-below'
 
   :general
@@ -321,23 +298,19 @@
 
   :hook
   (org-mode . olivetti-mode)
-  (org-mode . variable-pitch-mode)
-
-  :config
-  ;; set up org paths
-  (setq org-directory "c:/Users/HughesDavA/Documents/org/")
-  (setq org-default-notes-file (concat org-directory "/todo.org")))
+  (org-mode . variable-pitch-mode))
 
 (use-package org-journal
   :ensure t
   :defer t
   :config
-  (setq org-journal-dir (concat baz/org-path)
-	org-journal-file-type 'yearly
+  (setq org-journal-dir org-directory
+	org-journal-file-type 'weekly
 	org-journal-file-format "%Y-%m-%d.org"
 	org-journal-enable-agenda-integration t
 	org-extend-today-until 4
-	org-journal-date-format "%a, %Y-%m-%d")
+	org-journal-date-format "%a, %Y-%m-%d"
+	org-journal-find-file #'find-file)
   :general
   (baz/leader-keys
   "nj" '(org-journal-new-entry :wk "create new entry")))
@@ -346,12 +319,12 @@
   :ensure t
   :config
   (setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
-  (setq magit-git-executable "c:/Program Files/Git/bin/git")
   :general
   (baz/leader-keys
     "g" '(:ignore t :wk "git")
     "gg" '(magit-status :wk "magit status")))
 
+(load "~/.emacs.d/windows-specific.el")
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
