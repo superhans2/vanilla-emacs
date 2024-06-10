@@ -361,24 +361,9 @@
     "gg" '(magit-status :wk "magit status")))
 
 ;; CODE
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
 (add-hook 'emacs-lisp-mode-hook
 	  (lambda ()
 	    (hs-minor-mode)))
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
-
-;; if in windows this will overwrite variables 
-;; (load "windows-specific.el")
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(org-agenda-files '("/home/alex/org/journal/2024-06-10.org"))
- '(package-selected-packages
-   '(spacious-padding which-key vertico undo-tree treeview treemacs perspective org-journal olivetti marginalia magit lispy general evil-collection doom-modeline consult)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
