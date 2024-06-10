@@ -1,0 +1,17 @@
+.cache/
+backup.el
+bookmarks
+elpa/
+history
+session.205e103d8-279a-40c5-b4c6-fea7437335ce
+transient/
+#history#
+auto-save-list/
+bookmarks~
+init.bak.el
+init.el~
+network-security.data
+org-persist/
+server/
+tab-config.el~
+windows-specific.el~
