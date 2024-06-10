@@ -52,7 +52,7 @@
   (tool-bar-mode -1)          
   (tooltip-mode -1)          
   (menu-bar-mode -1)        
-  (setq visible-bell nil)
+  (setq ring-bell-function 'ignore)
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
 )
 (setq org-directory (concat (getenv "HOME") "/org")
@@ -244,8 +244,8 @@
   (vertico-mode))
 (use-package corfu
   :hook (prog-mode . corfu-mode))
-;; Persist history over Emacs restarts. Vertico sorts by history position.
 (use-package savehist
+  ;; Persist history over Emacs restarts. Vertico sorts by history position.
   :init
   (savehist-mode))
 (use-package consult
@@ -368,12 +368,17 @@
 	  (lambda ()
 	    (hs-minor-mode)))
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
+(use-package flycheck
+  :diminish 'flycheck-mode
+  :config 
+  (add-hook 'after-init-hook #'global-flycheck-mode))
 
 ;; copying tab bar navigation code 
-(defhydra mmk2410/tab-bar (:color teal)
+(defhydra mmk2410/tab-bar ()
   "My tab-bar helpers"
-  ("a" mmk2410/tab-bar-run-agenda "Agenda")
-  ("j" mmk2410/tab-bar-run-journal "Journal"))
+  ("j" mmk2410/tab-bar-run-journal "Org")
+  ("i" baz/tab-bar-run-config "Config")
+  ("c" nil "cancel" :color blue))
 
 (global-set-key (kbd "C-c f") 'mmk2410/tab-bar/body)
 
@@ -397,18 +402,36 @@
 (defun mmk2410/tab-bar-run-journal ()
   (interactive)
   (mmk2410/tab-bar-switch-or-create
-   "Journal"
+   "Org"
    #'org-journal-open-current-journal-file))
 
-(setq evil-vsplit-window-right t)
+(defun baz/tab-bar-run-config ()
+  (interactive)
+  (mmk2410/tab-bar-switch-or-create
+   "Config"
+   (lambda () (find-file "/home/alex/vanilla-emacs/init.el"))))
+
 (defun baz/startup ()
   (progn
+    ;; setting up Org tab
     (tab-rename "Org")
     (org-journal-open-current-journal-file)
-    (evil-window-vsplit 40)
+    (evil-window-vsplit 60)
     (other-window 1)
     (find-file (concat org-directory "/inbox.org"))))
 
 ;; emacs startup hook
-(add-hook 'emacs-startup-hook 'baz/startup)
+(add-hook 'window-setup-hook 'baz/startup)
 
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(org-agenda-files '("/home/alex/org/journal/2024-06-10.org")))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
