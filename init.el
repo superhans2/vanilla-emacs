@@ -281,6 +281,7 @@
 ;; Add custom keybindings within the tab-prefix-map
 (define-key tab-prefix-map (kbd "n") 'baz/open-new-tab)
 (define-key tab-prefix-map (kbd "2") 'tab-duplicate)
+(define-key tab-prefix-map (kbd "j") 'mmk2410/tab-bar/body)
 (defun baz/open-new-tab ()
   (interactive)
   (progn
