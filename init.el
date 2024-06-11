@@ -341,7 +341,7 @@
   :ensure t
   :defer t
   :config
-  (setq org-journal-dir org-directory
+  (setq org-journal-dir (concat org-directory "/journal")
 	org-journal-file-type 'weekly
 	org-journal-file-format "%Y-%m-%d.org"
 	org-journal-enable-agenda-integration t
@@ -379,8 +379,8 @@
 	      "tab-config.el" user-emacs-directory))
 
 ;; modifies all variables in above code so they apply to windows system
-(load-file (expand-file-name
-	      "windows-specific.el" user-emacs-directory))
+;;(load-file (expand-file-name
+;;	      "windows-specific.el" user-emacs-directory))
 
 
 (custom-set-variables
@@ -388,7 +388,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-agenda-files '("c:/Users/HughesDavA/Documents/org/2024-01-01.org")))
+ '(org-agenda-files
+   '("/home/alex/org/c:/Users/HughesDavA/Documents/org/2024-01-01.org" "/home/alex/org/journal/2024-06-10.org")))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
