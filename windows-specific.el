@@ -5,7 +5,6 @@
 (require 'bookmark)
 ;; (list-bookmarks)
 ;; (switch-to-buffer "*Bookmark List*")
-(setq bookmark-save-flag 1)
 
 
 

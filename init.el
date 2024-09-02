@@ -44,6 +44,7 @@
   :ensure nil
   :init
   (defalias 'yes-or-no-p 'y-or-n-p)
+  (setq bookmark-save-flag 1)
   (setq inhibit-startup-message t)
   (setq make-backup-files nil)
   (auto-save-mode -1)
@@ -337,22 +338,37 @@
 
   :hook
   (org-mode . olivetti-mode)
-  (org-mode . variable-pitch-mode))
+  (org-mode . variable-pitch-mode)
+  :config
+  ;; annoying problem where org-journal breaks if I don't remove trailing whitespace
+  ;; doom does this automatically not clear where
+  (defun my-org-mode-setup ()
+    "Custom configurations for `org-mode`."
+    (add-hook 'before-save-hook 'delete-trailing-whitespace nil t))
+  (add-hook 'org-mode-hook 'my-org-mode-setup))
 (use-package org-journal
   :ensure t
   :defer t
   :config
   (setq org-journal-dir (concat org-directory "/journal")
-	org-journal-file-type 'weekly
-	org-journal-file-format "%Y-%m-%d.org"
-	org-journal-enable-agenda-integration t
+	org-journal-file-type 'monthly
+	org-journal-file-format "%Y-%m.org"
+	org-journal-enable-agenda-integration nil    ;; TODO change this at some point
 	org-extend-today-until 4
 	org-journal-date-format "%a, %Y-%m-%d"
+	;; org-journal-enable-encryption t
 	org-journal-find-file #'find-file)
   :general
   (baz/leader-keys
     "nj" '(org-journal-new-entry :wk "create new entry")
     "ng" '(org-journal-open-current-journal-file :wk "go to current journal entry")))
+
+;; org-crypt
+(require 'org-crypt)
+(org-crypt-use-before-save-magic)
+(setq org-crypt-key nil)
+(setq auto-save-default nil)
+
 (use-package magit
   :ensure t
   :config
@@ -390,7 +406,9 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(org-agenda-files
-   '("/home/alex/org/c:/Users/HughesDavA/Documents/org/2024-01-01.org" "/home/alex/org/journal/2024-06-10.org")))
+   '("/home/alex/org/c:/Users/HughesDavA/Documents/org/2024-01-01.org" "/home/alex/org/journal/2024-06-10.org" "/home/alex/org/journal/2024-08.org"))
+ '(package-selected-packages
+   '(org-download which-key vertico undo-tree treeview treemacs spacious-padding rainbow-delimiters perspective org-journal orderless olivetti marginalia magit lispy general flycheck evil-collection doom-modeline corfu consult)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
