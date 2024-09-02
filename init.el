@@ -157,14 +157,14 @@
   ;; file
   (baz/leader-keys
     "f" '(:ignore t :wk "file")
-    "ff" '(find-file :wk "find file") ;; gets overridden by consult
+    "ff" '(consult-file :wk "find file") ;; gets overridden by consult
     "fs" '(save-buffer :wk "save file"))
 
   ;; buffer
   ;; see 'bufler' and 'popper'
   (baz/leader-keys
     "b" '(:ignore t :wk "buffer")
-    "bb" '(switch-to-buffer :wk "switch buffer") ;; gets overridden by consult
+    "bb" '(consult-buffer :wk "switch buffer") ;; gets overridden by consult
     "bk" '(kill-this-buffer :wk "kill this buffer")
     "br" '(revert-buffer :wk "reload buffer"))
 
@@ -199,7 +199,7 @@
 
   ;; buffer list
   (baz/leader-keys
-    "," '(switch-to-buffer :wk "switch buffer"))
+    "," '(consult-buffer :wk "switch buffer"))
 
   ;; open
   (baz/leader-keys
@@ -216,12 +216,13 @@
     "to" '(olivetti-mode :wk "toggle olivetti mode")) 
 
   ;; search
-  ;; see 'consult'
   (baz/leader-keys
-    "s" '(:ignore t :wk "search"))
+    "s"  '(:ignore t :wk "search")
+    "sd" '(consult-ripgrep :wk "search directory")
+    "ss" '(consult-line :wk "search line")
+    "sG" '(consult-git-grep :wk "consult git grep"))
 
   ;; templating
-  ;; see 'tempel'
   (baz/leader-keys
     "t" '(:ignore t :wk "template")))
 
@@ -251,20 +252,7 @@
   (savehist-mode))
 (use-package consult
   :demand t
-  :ensure t
-  :general
-  (baz/leader-keys
-    "bb" '(consult-buffer :wk "consult buffer")
-    "Bb" '(consult-bookmark :wk "consult bookmark")
-    ;; "ht" '(consult-theme :wk "consult theme")
-    "sr" '(consult-ripgrep :wk "consult rg")
-    "sg" '(consult-grep :wk "consult grep")
-    "sG" '(consult-git-grep :wk "consult git grep")
-    "sf" '(consult-find :wk "consult find")
-    "sF" '(consult-locate :wk "consult locate")
-    "sl" '(consult-line :wk "consult line")
-    "sy" '(consult-yank-from-kill-ring :wk "consult yank from kill ring")
-    "i" '(consult-imenu :wk "consult imenu")))
+  :ensure t)
 (use-package orderless
   :ensure t
   :custom
