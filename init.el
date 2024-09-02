@@ -352,10 +352,14 @@
     "ng" '(org-journal-open-current-journal-file :wk "go to current journal entry")))
 
 ;; org-crypt
-(require 'org-crypt)
-(org-crypt-use-before-save-magic)
-(setq org-crypt-key nil)
-(setq auto-save-default nil)
+(use-package org-crypt
+  :ensure nil
+  :after org
+  :config
+  (org-crypt-use-before-save-magic)
+  (setq org-crypt-tag-matcher "crypt|diary")
+  (setq org-crypt-key "C0FC1B41A828E1FA")
+  (setq auto-save-default nil))
 
 (use-package magit
   :ensure t
