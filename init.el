@@ -306,21 +306,10 @@
   (baz/local-leader-keys
         :keymaps 'org-mode-map
         "a" '(org-archive-subtree :wk "archive")
-        "l" '(:ignore t :wk "link")
-        "ll" '(org-insert-link t :wk "link")
-        "lp" '(org-latex-preview t :wk "prev latex")
-        "h" '(consult-org-heading :wk "consult heading")
-        "d" '(org-cut-special :wk "org cut special")
-        "y" '(org-copy-special :wk "org copy special")
-        "p" '(org-paste-special :wk "org paste special")
-        "b" '(:keymap org-babel-map :wk "babel")
+        "d" '(org-decrypt-entries :wk "decrypt org entries")
         "t" '(org-todo :wk "todo")
         "s" '(org-insert-structure-template :wk "template")
         "e" '(org-edit-special :wk "edit")
-        "i" '(:ignore t :wk "insert")
-        "ih" '(org-insert-heading :wk "insert heading")
-        "is" '(org-insert-subheading :wk "insert heading")
-        "f" '(org-footnote-action :wk "footnote action")
         ">" '(org-demote-subtree :wk "demote subtree")
         "<" '(org-promote-subtree :wk "demote subtree"))
 
