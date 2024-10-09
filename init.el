@@ -335,10 +335,21 @@
 	org-journal-date-format "%a, %Y-%m-%d"
 	;; org-journal-enable-encryption t
 	org-journal-find-file #'find-file)
+
+  (defun baz/org-journal-new-diary-entry ()
+    (call-interactively 'org-journal-new-entry)
+    (org-set-tags "diary"))
+
+  (defun baz/org-journal-new-entry-with-tags ()
+    (call-interactively 'org-journal-new-entry)
+    (org-set-tags "diary")))
+
   :general
   (baz/leader-keys
     "nj" '(org-journal-new-entry :wk "create new entry")
-    "ng" '(org-journal-open-current-journal-file :wk "go to current journal entry")))
+    "ng" '(org-journal-open-current-journal-file :wk "go to current journal file")
+    "nd" '(baz/org-journal-new-diary-entry :wk "create new diary entry")
+    "nt" '(baz/org-journal-new-entry-with-tags :wk "create new entry with tags"))
 
 ;; org-crypt
 (use-package org-crypt
@@ -376,6 +387,8 @@
 (load-file (expand-file-name
 	      "tab-config.el" user-emacs-directory))
 
+(load-file (expand-file-name
+	      "journal-config.el" user-emacs-directory))
 ;; modifies all variables in above code so they apply to windows system
 ;;(load-file (expand-file-name
 ;;	      "windows-specific.el" user-emacs-directory))
@@ -396,3 +409,5 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+
