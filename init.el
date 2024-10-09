@@ -48,10 +48,10 @@
   (setq inhibit-startup-message t)
   (setq make-backup-files nil)
   (auto-save-mode -1)
-  (scroll-bar-mode -1)        
-  (tool-bar-mode -1)          
-  (tooltip-mode -1)          
-  (menu-bar-mode -1)        
+  (scroll-bar-mode -1)
+  (tool-bar-mode -1)
+  (tooltip-mode -1)
+  (menu-bar-mode -1)
   (setq ring-bell-function 'ignore)
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
   )
@@ -77,7 +77,7 @@
   (setq evil-respect-visual-line-mode t)
   (setq evil-undo-system 'undo-redo)
   :config
-  (evil-mode 1)
+  ;; (evil-mode 0)
   (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
   (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
 
@@ -218,7 +218,7 @@
   ;; search
   (baz/leader-keys
     "s"  '(:ignore t :wk "search")
-    "sd" '(consult-ripgrep :wk "search directory")
+    "sd" '(consult-grep :wk "search directory")
     "ss" '(consult-line :wk "search line")
     "sG" '(consult-git-grep :wk "consult git grep"))
 
