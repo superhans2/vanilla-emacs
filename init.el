@@ -19,7 +19,7 @@
   (package-refresh-contents))
 ;; Initialize use-package on non-Linux platforms
 (unless (package-installed-p 'use-package)
-   (package-install 'use-package))
+  (package-install 'use-package))
 (require 'use-package)
 
 
@@ -54,7 +54,7 @@
   (menu-bar-mode -1)        
   (setq ring-bell-function 'ignore)
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
-)
+  )
 (setq org-directory (concat (getenv "HOME") "/org")
       org-notes (concat org-directory "/ZK")
       zot-bib (concat (getenv "HOME") "/Documents/zotLib.bib")
@@ -138,11 +138,11 @@
 
 
   (baz/local-leader-keys
-        :keymaps 'emacs-lisp-mode-map
-        "h" '(hs-hide-all :wk "hide all")
-	"," '(hs-toggle-hiding :wk "toggle code block")
-	"o" '(hs-show-block :wk "show block")
-	"O" '(hs-hide-block :wk "hide block"))
+    :keymaps 'emacs-lisp-mode-map
+    "h" '(hs-hide-all :wk "hide all")
+    "," '(hs-toggle-hiding :wk "toggle code block")
+    "o" '(hs-show-block :wk "show block")
+    "O" '(hs-hide-block :wk "hide block"))
 
   ;; help
   ;; namespace mostly used by 'helpful'
@@ -235,11 +235,11 @@
 (use-package vertico
   :ensure t
   :bind (:map vertico-map
-	 ("C-j" . vertico-next)
-	 ("C-k" . vertico-previous)
-	 ("C-f" . vertico-exit)
-	 :map minibuffer-local-map
-	 ("M-h" . backward-kill-word))
+	      ("C-j" . vertico-next)
+	      ("C-k" . vertico-previous)
+	      ("C-f" . vertico-exit)
+	      :map minibuffer-local-map
+	      ("M-h" . backward-kill-word))
   :custom
   (vertico-cycle t)
   :init
@@ -304,14 +304,14 @@
 
   :general
   (baz/local-leader-keys
-        :keymaps 'org-mode-map
-        "a" '(org-archive-subtree :wk "archive")
-        "d" '(org-decrypt-entries :wk "decrypt org entries")
-        "t" '(org-todo :wk "todo")
-        "s" '(org-insert-structure-template :wk "template")
-        "e" '(org-edit-special :wk "edit")
-        ">" '(org-demote-subtree :wk "demote subtree")
-        "<" '(org-promote-subtree :wk "demote subtree"))
+    :keymaps 'org-mode-map
+    "a" '(org-archive-subtree :wk "archive")
+    "d" '(org-decrypt-entries :wk "decrypt org entries")
+    "t" '(org-todo :wk "todo")
+    "s" '(org-insert-structure-template :wk "template")
+    "e" '(org-edit-special :wk "edit")
+    ">" '(org-demote-subtree :wk "demote subtree")
+    "<" '(org-promote-subtree :wk "demote subtree"))
 
   :hook
   (org-mode . olivetti-mode)
@@ -325,7 +325,6 @@
   (add-hook 'org-mode-hook 'my-org-mode-setup))
 (use-package org-journal
   :ensure t
-  :defer t
   :config
   (setq org-journal-dir (concat org-directory "/journal")
 	org-journal-file-type 'monthly
@@ -344,12 +343,13 @@
     (call-interactively 'org-journal-new-entry)
     (org-set-tags "diary")))
 
-  :general
-  (baz/leader-keys
-    "nj" '(org-journal-new-entry :wk "create new entry")
-    "ng" '(org-journal-open-current-journal-file :wk "go to current journal file")
-    "nd" '(baz/org-journal-new-diary-entry :wk "create new diary entry")
-    "nt" '(baz/org-journal-new-entry-with-tags :wk "create new entry with tags"))
+:general
+(baz/leader-keys
+  "nj" '(org-journal-new-entry :wk "create new entry")
+  "ng" '(org-journal-open-current-journal-file :wk "go to current journal file")
+  "nd" '(baz/org-journal-new-diary-entry :wk "create new diary entry")
+  "nt" '(baz/org-journal-new-entry-with-tags :wk "create new entry with tags")
+  "nx" '(baz/refile-journal :wk "refile to journal"))
 
 ;; org-crypt
 (use-package org-crypt
@@ -385,11 +385,24 @@
 
 
 (load-file (expand-file-name
-	      "tab-config.el" user-emacs-directory))
+	    "tab-config.el" user-emacs-directory))
 
-;; (load-file (expand-file-name
-;; 	      "journal-config.el" user-emacs-directory))
+(load-file (expand-file-name
+ 	    "journal-config.el" user-emacs-directory))
 ;; modifies all variables in above code so they apply to windows system
 ;;(load-file (expand-file-name
 ;;	      "windows-specific.el" user-emacs-directory))
 
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(nov which-key vertico undo-tree treeview treemacs spacious-padding rainbow-delimiters perspective org-journal org-download orderless olivetti marginalia magit lispy general flycheck evil-collection doom-modeline corfu consult)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

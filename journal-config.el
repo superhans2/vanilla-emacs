@@ -3,22 +3,20 @@
 ;; code for accommodating now-extend-time
 (defun baz/it-is-in-extended-zone ()
   "In the time after midnight but before I count the next day having begun."
-    (< (nth 2 (decode-time)) org-extend-today-until))
+  (< (nth 2 (decode-time)) org-extend-today-until))
 
 ;; accessing location to reformat to
-(defun baz/current-day (now)
-  (if (baz/it-is-in-extended-zone)
-      (format-time-string org-journal-date-format (encode-time (nth 0 now)
-                        (nth 1 now)
-                        (nth 2 now)
-                        (1- (nth 3 now))
-                        (nth 4 now)
-                        (nth 5 now)
-                        (nth 8 now)))
-      (format-time-string org-journal-date-format (current-time))))
-
-(baz/current-day (decode-time nil))   ;; TODO need to work out how to assign variable within emacs function
-
+(defun baz/current-day ()
+  (let (now (decode-time nil))
+    (if (baz/it-is-in-extended-zone)
+	(format-time-string org-journal-date-format (encode-time (nth 0 now)
+								 (nth 1 now)
+								 (nth 2 now)
+								 (1- (nth 3 now))
+								 (nth 4 now)
+								 (nth 5 now)
+								 (nth 8 now)))
+      (format-time-string org-journal-date-format (current-time)))))
 
 (defun baz/refile (file headline)
   (let ((pos (save-excursion
@@ -34,5 +32,5 @@
     (org-todo "DONE")
     (baz/refile
      (org-journal--get-entry-path)
-     (baz/current-day (decode-time nil)))
+     (baz/current-day))
     (switch-to-buffer (other-buffer))))
