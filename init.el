@@ -387,27 +387,9 @@
 (load-file (expand-file-name
 	      "tab-config.el" user-emacs-directory))
 
-(load-file (expand-file-name
-	      "journal-config.el" user-emacs-directory))
+;; (load-file (expand-file-name
+;; 	      "journal-config.el" user-emacs-directory))
 ;; modifies all variables in above code so they apply to windows system
 ;;(load-file (expand-file-name
 ;;	      "windows-specific.el" user-emacs-directory))
-
-
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(org-agenda-files
-   '("/home/alex/org/c:/Users/HughesDavA/Documents/org/2024-01-01.org" "/home/alex/org/journal/2024-06-10.org" "/home/alex/org/journal/2024-08.org"))
- '(package-selected-packages
-   '(org-download which-key vertico undo-tree treeview treemacs spacious-padding rainbow-delimiters perspective org-journal orderless olivetti marginalia magit lispy general flycheck evil-collection doom-modeline corfu consult)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
-
 
