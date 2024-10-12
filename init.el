@@ -52,6 +52,7 @@
   (tool-bar-mode -1)
   (tooltip-mode -1)
   (menu-bar-mode -1)
+  (tab-bar-history-mode 1)
   (setq ring-bell-function 'ignore)
   (add-to-list 'default-frame-alist '(fullscreen . maximized))
   )
@@ -77,7 +78,7 @@
   (setq evil-respect-visual-line-mode t)
   (setq evil-undo-system 'undo-redo)
   :config
-  ;; (evil-mode 0)
+  (evil-mode 1)
   (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
   (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
 
@@ -95,6 +96,7 @@
   ;; (setq evil-collection-mode-list nil) ;; I don't like surprises
   ;; (add-to-list 'evil-collection-mode-list 'magit) ;; evilify magit
   :config
+  (global-set-key (kbd "C-z") 'evil-exit-emacs-state)
   (evil-collection-init))
 (use-package general
   :ensure t
@@ -127,8 +129,8 @@
 
   (baz/leader-keys
     "w" '(:keymap evil-window-map :wk "window")
-    "wu" '(winner-undo :wk "winner-undo")
-    "wU" '(winner-redo :wk "winner-redo")) ;; window bindings
+    "wu" '(tab-bar-history-back :wk "window arrangement undo")
+    "wU" '(tab-bar-history-forward :wk "window arrangement redo")) ;; window bindings
 
   (baz/leader-keys
     "s" '(:ignore t :wk "search"))
@@ -282,13 +284,16 @@
 
 ;; ESSENTIAL TOOLS 
 (defvar dired-details-enabled t)
+
 (defun baz/toggle-dired-details()
   (if dired-details-enabled
       (setq dired-details-enabled '())
     (setq dired-details-enabled t)))
+
 (add-hook 'dired-mode-hook
 	  (lambda ()
 	    (dired-hide-details-mode)))
+
 (use-package org
   :ensure t
   :demand t
@@ -323,6 +328,7 @@
     "Custom configurations for `org-mode`."
     (add-hook 'before-save-hook 'delete-trailing-whitespace nil t))
   (add-hook 'org-mode-hook 'my-org-mode-setup))
+
 (use-package org-journal
   :ensure t
   :config
@@ -374,15 +380,17 @@
 ;; CODE
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
+
 (add-hook 'emacs-lisp-mode-hook
 	  (lambda ()
 	    (hs-minor-mode)))
+
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
+
 (use-package flycheck
   :diminish 'flycheck-mode
   :config 
   (add-hook 'after-init-hook #'global-flycheck-mode))
-
 
 (load-file (expand-file-name
 	    "tab-config.el" user-emacs-directory))
@@ -399,7 +407,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(nov which-key vertico undo-tree treeview treemacs spacious-padding rainbow-delimiters perspective org-journal org-download orderless olivetti marginalia magit lispy general flycheck evil-collection doom-modeline corfu consult)))
+   '(elisp-slime-nav nov which-key vertico undo-tree treeview treemacs spacious-padding rainbow-delimiters perspective org-journal org-download orderless olivetti marginalia magit lispy general flycheck evil-collection doom-modeline corfu consult)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
