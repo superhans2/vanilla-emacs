@@ -34,3 +34,41 @@
      (org-journal--get-entry-path)
      (baz/current-day))
     (switch-to-buffer (other-buffer))))
+
+
+;; AUTOMATICALLY LOADING IMAGES INTO JOURNAL:  
+
+(setq tmp-directory "~/code/elisp/tmp-files/"
+      dest-directory "~/code/elisp/files/") 
+
+(defun baz/insert-images-into-journal ()
+  (dolist (old-file-path (directory-files tmp-directory t directory-files-no-dot-files-regexp))
+    (let* ((old-file-path-no-dir (file-name-nondirectory old-file-path))
+	   (new-filename (concat dest-directory old-file-path-no-dir)))
+
+      ;; move file 
+      (rename-file old-file-path new-filename)
+
+      ;; create a link to new file in journal
+      (baz/create-link-to-file new-filename))
+    ))
+
+(defun baz/org-capture-image (list-of-image-paths)
+  (let* ((content-text "testing.png")
+	 (org-capture-templates `(("ji" "journal entry" entry (file+headline ,(org-journal--get-entry-path) ,(baz/current-day))
+				   ,(concat "* TODO image \n" content-text)
+				   :immediate-finish t))))
+    ;; Use `org-capture' with a specific template without user input
+    (org-capture nil "ji")))
+
+
+
+
+(defun baz/create-link-to-file (filepath)
+  (message "creating link to %s" filepath)
+  (call-interactively 'org-journal-new-entry)
+  (insert (format "\n[[file:%s]]" filepath))
+  (save-buffer)
+  (kill-buffer))
+
+(baz/insert-images-into-journal)
