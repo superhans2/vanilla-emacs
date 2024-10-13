@@ -247,7 +247,12 @@
   :init
   (vertico-mode))
 (use-package corfu
-  :hook (prog-mode . corfu-mode))
+  :custom
+  (corfu-auto t)
+  
+  :hook
+  (prog-mode . corfu-mode))
+
 (use-package savehist
   ;; Persist history over Emacs restarts. Vertico sorts by history position.
   :init
@@ -306,6 +311,7 @@
         '((sequence "TODO(t)" "NEXT(n)" "WAIT(w)" "|" "DONE(d)" "CANCELLED")
 	  (sequence "PROJ" "|" "COMPLETED")))
   (setq org-adapt-indentation nil)   ;; interacts poorly with 'evil-open-below'
+  (setq org-image-actual-width 200)
 
   :general
   (baz/local-leader-keys
