@@ -44,20 +44,52 @@
 (defvar dest-directory "~/code/elisp/files/")
 
 (defun baz/insert-images-into-journal ()
-  (dolist (old-file-path (directory-files tmp-directory t  directory-files-no-dot-files-regexp))
-    (let* ((old-file-path-no-dir (file-name-nondirectory old-file-path))
+  (dolist
+      (file-path (directory-files tmp-directory t  directory-files-no-dot-files-regexp))
+
+    (if (file-directory-p file-path)
+	(baz/handle-directory-of-images file-path)
+      (baz/handle-single-image file-path))
+    )
+  )
+
+
+(defun baz/handle-single-image (image-filename)
+  """ Handles single images moving into journal
+"""
+    (let* ((old-file-path-no-dir (file-name-nondirectory image-filename))
 	   (new-filename (concat dest-directory old-file-path-no-dir)))
 
       ;; move file
-      (rename-file old-file-path new-filename)
+      (rename-file image-filename new-filename)
 
       ;; create a link to new file in journal
-      (message "new filename: %s" new-filename)
       (baz/org-capture-image (list new-filename))
       )
-    ))
+  )
 
-(baz/insert-images-into-journal)
+(defun baz/handle-directory-of-images (image-directory-filename)
+  """ Handles directory of images moving into journal"
+  (let* ((filenames (directory-files image-directory-filename t directory-files-no-dot-files-regexp)))
+    (if filenames
+	(baz/org-capture-image (baz/move-list-and-return-changed-filenames filenames)))
+  ))
+
+(defun baz/move-list-and-return-changed-filenames (list-of-filenames)
+  """helper method for baz/handle-directory-of-images"""
+  (let* ((old-filename (car list-of-filenames))
+	 (old-file-path-no-dir (file-name-nondirectory old-filename))
+	 (new-filename (concat dest-directory old-file-path-no-dir)))
+    ;; move the file
+    (rename-file old-filename new-filename)
+
+    ;; move entire list 
+    (if (cdr list-of-filenames)
+	(cons new-filename (baz/move-list-and-return-changed-filenames (cdr list-of-filenames)))
+      (list new-filename))
+    )
+  )
+
 
 (defun baz/org-capture-image (list-of-image-paths)
   (let* ((content-text (baz/generate-org-content-from-image-paths list-of-image-paths))
