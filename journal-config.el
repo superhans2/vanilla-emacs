@@ -38,30 +38,42 @@
     (switch-to-buffer (other-buffer))))
 
 
-;; AUTOMATICALLY LOADING IMAGES INTO JOURNAL:  
+;; AUTOMATICALLY LOADING IMAGES INTO JOURNAL:
 
-(setq tmp-directory "~/code/elisp/tmp-files/"
-      dest-directory "~/code/elisp/files/") 
+(defvar tmp-directory "~/code/elisp/tmp-files/")
+(defvar dest-directory "~/code/elisp/files/")
 
 (defun baz/insert-images-into-journal ()
-  (dolist (old-file-path (directory-files tmp-directory t directory-files-no-dot-files-regexp))
+  (dolist (old-file-path (directory-files tmp-directory t  directory-files-no-dot-files-regexp))
     (let* ((old-file-path-no-dir (file-name-nondirectory old-file-path))
 	   (new-filename (concat dest-directory old-file-path-no-dir)))
 
-      ;; move file 
+      ;; move file
       (rename-file old-file-path new-filename)
 
       ;; create a link to new file in journal
-      (baz/create-link-to-file new-filename))
+      (message "new filename: %s" new-filename)
+      (baz/org-capture-image (list new-filename))
+      )
     ))
 
+(baz/insert-images-into-journal)
+
 (defun baz/org-capture-image (list-of-image-paths)
-  (let* ((content-text "testing.png")
+  (let* ((content-text (baz/generate-org-content-from-image-paths list-of-image-paths))
 	 (org-capture-templates `(("ji" "journal entry" entry (file+headline ,(org-journal--get-entry-path) ,(baz/current-day))
-				   ,(concat "* TODO image \n" content-text)
+				   ,(concat "* TODO image" content-text)
 				   :immediate-finish t))))
     ;; Use `org-capture' with a specific template without user input
     (org-capture nil "ji")))
+
+(defun baz/generate-org-content-from-image-paths (list-of-image-paths)
+  (message (car list-of-image-paths))
+  (if list-of-image-paths
+      (concat "\n" "[[" (car list-of-image-paths) "]]" (baz/generate-org-content-from-image-paths (cdr list-of-image-paths)))
+    ""
+    )
+)
 
 
 
