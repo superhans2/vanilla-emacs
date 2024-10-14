@@ -8,7 +8,9 @@
 ;; accessing location to reformat to
 (defun baz/current-day ()
   (let (now (decode-time nil))
-    (if (baz/it-is-in-extended-zone)
+    (if '() ;; (baz/it-is-in-extended-zone)
+	;; this bit doesn't work
+	;; TODO fix
 	(format-time-string org-journal-date-format (encode-time (nth 0 now)
 								 (nth 1 now)
 								 (nth 2 now)
