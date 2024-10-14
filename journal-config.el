@@ -45,13 +45,17 @@
 
 (defun baz/insert-images-into-journal ()
   (dolist
-      (file-path (directory-files tmp-directory t  directory-files-no-dot-files-regexp))
-
+      (file-path (baz/filter-list-of-stfolder (directory-files tmp-directory t  directory-files-no-dot-files-regexp)))
     (if (file-directory-p file-path)
 	(baz/handle-directory-of-images file-path)
       (baz/handle-single-image file-path))
     )
   )
+
+(defun baz/filter-list-of-stfolder (filelist)
+  (seq-remove (lambda (x) (string-match "c.txt" (file-name-nondirectory x))) filelist)
+  )
+
 
 
 (defun baz/handle-single-image (image-filename)
