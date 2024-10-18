@@ -317,7 +317,7 @@
   (baz/local-leader-keys
     :keymaps 'org-mode-map
     "a" '(org-archive-subtree :wk "archive")
-    "d" '(org-decrypt-entries :wk "decrypt org entries")
+    "d" '(org-decrypt-entry :wk "decrypt org entry")
     "t" '(org-todo :wk "todo")
     "s" '(org-insert-structure-template :wk "template")
     "e" '(org-edit-special :wk "edit")
