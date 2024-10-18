@@ -40,10 +40,16 @@
 
 ;; AUTOMATICALLY LOADING IMAGES INTO JOURNAL:
 
-(defvar tmp-directory "~/code/elisp/tmp-files/")
-(defvar dest-directory "~/code/elisp/files/")
+(defun baz/insert-images-into-journal-on-pi ()
+  (baz/insert-images-into-journal "~/Pictures/journal-photos-sync/"
+				  "~/Pictures/photos/"))
 
-(defun baz/insert-images-into-journal ()
+;; not intended to be used, this is just for testing function for use on Pi
+(defun baz/insert-images-into-journal-test-on-laptop ()
+  (baz/insert-images-into-journal "~/code/elisp/tmp-files/"
+				  "~/code/elisp/files/"))
+
+(defun baz/insert-images-into-journal (tmp dest)
   (dolist
       (file-path (baz/filter-list-of-stfolder (directory-files tmp-directory t  directory-files-no-dot-files-regexp)))
     (if (file-directory-p file-path)
@@ -51,6 +57,7 @@
       (baz/handle-single-image file-path))
     )
   )
+
 
 (defun baz/filter-list-of-stfolder (filelist)
   (seq-remove (lambda (x) (string-match "c.txt" (file-name-nondirectory x))) filelist)
@@ -106,13 +113,10 @@
 (defun baz/generate-org-content-from-image-paths (list-of-image-paths)
   (message (car list-of-image-paths))
   (if list-of-image-paths
-      (concat "\n" "[[" (car list-of-image-paths) "]]" (baz/generate-org-content-from-image-paths (cdr list-of-image-paths)))
+      (concat "\n" "[[" (string-replace "~" ".." (car list-of-image-paths)) "]]" (baz/generate-org-content-from-image-paths (cdr list-of-image-paths)))
     ""
     )
 )
-
-
-
 
 (defun baz/create-link-to-file (filepath)
   (message "creating link to %s" filepath)
@@ -121,4 +125,3 @@
   (save-buffer)
   (kill-buffer))
 
-(baz/insert-images-into-journal)
