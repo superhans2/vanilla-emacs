@@ -40,16 +40,14 @@
 
 ;; AUTOMATICALLY LOADING IMAGES INTO JOURNAL:
 
-(defun baz/insert-images-into-journal-on-pi ()
-  (baz/insert-images-into-journal "~/Pictures/journal-photos-sync/"
-				  "~/Pictures/photos/"))
 
-;; not intended to be used, this is just for testing function for use on Pi
-(defun baz/insert-images-into-journal-test-on-laptop ()
-  (baz/insert-images-into-journal "~/code/elisp/tmp-files/"
-				  "~/code/elisp/files/"))
+;; (defvar tmp-directory "~/code/elisp/tmp-files/")
+;; (defvar dest-directory "~/code/elisp/files/")
 
-(defun baz/insert-images-into-journal (tmp dest)
+(defvar tmp-directory "~/Pictures/journal-photos-sync/")
+(defvar dest-directory "~/Pictures/photos/")
+
+(defun baz/insert-images-into-journal ()
   (dolist
       (file-path (baz/filter-list-of-stfolder (directory-files tmp-directory t  directory-files-no-dot-files-regexp)))
     (if (file-directory-p file-path)
