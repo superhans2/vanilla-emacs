@@ -1,3 +1,4 @@
+;;; INITIAL
 ;; following Systems Crafters config
 ;; The default is 800 kilobytes.  Measured in bytes.
 (setq gc-cons-threshold (* 50 1000 1000))
@@ -23,7 +24,8 @@
 (require 'use-package)
 
 
-;; APPEARANCE
+
+;;; APPEARANCE
 (defvar baz/default-font-size 220)
 (set-face-attribute 'default nil :font "JetBrains Mono" :height baz/default-font-size)
 (set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :height baz/default-font-size)
@@ -38,7 +40,8 @@
   (setq olivetti-minimum-body-width 50))
 (setq-default line-spacing 4)
 
-;; MISC
+
+;;; MISC
 (use-package emacs
   :demand t
   :ensure nil
@@ -61,7 +64,8 @@
       zot-bib (concat (getenv "HOME") "/Documents/zotLib.bib")
       org-roam-directory org-notes)
 
-;; KEYBINDING MANAGERS
+
+;;; KEYBINDING MANAGERS
 (use-package which-key
   :ensure t
   :init (which-key-mode)
@@ -73,7 +77,7 @@
   :init
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
-  (setq evil-want-C-u-scroll t)
+  (setq evil-want-C-u-scroll nil)
   (setq evil-want-C-i-jump nil)
   (setq evil-respect-visual-line-mode t)
   (setq evil-undo-system 'undo-redo)
@@ -233,7 +237,7 @@
 (global-set-key (kbd "M-2") 'tab-next)
 (global-set-key (kbd "M-1") 'tab-previous)
 
-;; COMPLETION FRAMEWORK
+;;; COMPLETION FRAMEWORK
 (use-package vertico
   :ensure t
   :bind (:map vertico-map
@@ -271,7 +275,8 @@
   :bind (:map minibuffer-local-map
               ("M-A" . marginalia-cycle)))
 
-;; NAVIGATION
+
+;;; NAVIGATION
 ;; using hydra to chain 
 ;; todo open new bookmark with a newtab
 ;; Add custom keybindings within the tab-prefix-map
@@ -287,7 +292,8 @@
 (winner-mode)
 (tab-bar-mode)  ;; TAB BAR MODE on by default 
 
-;; ESSENTIAL TOOLS 
+
+;;; ESSENTIAL TOOLS 
 (defvar dired-details-enabled t)
 
 (defun baz/toggle-dired-details()
@@ -383,7 +389,8 @@
     "gg" '(magit-status :wk "magit status")))
 
 
-;; CODE
+
+;;; CODE
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
