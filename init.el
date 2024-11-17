@@ -1,6 +1,5 @@
+;; -*- outline-blank-line: t; -*-
 ;;; INITIAL
-;; following Systems Crafters config
-;; The default is 800 kilobytes.  Measured in bytes.
 (setq gc-cons-threshold (* 50 1000 1000))
 (add-hook 'emacs-startup-hook
 	  ;; Profile emacs startup
@@ -26,22 +25,26 @@
 
 
 ;;; APPEARANCE
+;;;; font
 (defvar baz/default-font-size 220)
 (set-face-attribute 'default nil :font "JetBrains Mono" :height baz/default-font-size)
 (set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :height baz/default-font-size)
 (set-face-attribute 'variable-pitch nil :font "JetBrains Mono" :height baz/default-font-size :weight 'regular)
 (load-theme 'modus-vivendi)
 (define-key global-map (kbd "<f5>") #'modus-themes-toggle)
+
+;;;; olivetti
 (use-package olivetti
   :demand t
   :init
   (setq olivetti-body-width 80)
   (setq olivetti-style 'fancy)
   (setq olivetti-minimum-body-width 50))
+
 (setq-default line-spacing 4)
 
 
-;;; MISC
+;;; EMACS CONFIG 
 (use-package emacs
   :demand t
   :ensure nil
@@ -57,21 +60,25 @@
   (menu-bar-mode -1)
   (tab-bar-history-mode 1)
   (setq ring-bell-function 'ignore)
-  (add-to-list 'default-frame-alist '(fullscreen . maximized))
-  )
+  (add-to-list 'default-frame-alist '(fullscreen . maximized)))
+
 (setq org-directory (concat (getenv "HOME") "/org")
       org-notes (concat org-directory "/ZK")
       zot-bib (concat (getenv "HOME") "/Documents/zotLib.bib")
       org-roam-directory org-notes)
 
 
-;;; KEYBINDING MANAGERS
+;;; KEYBINDING 
+;;;; packages
 (use-package which-key
   :ensure t
   :init (which-key-mode)
   :diminish which-key-mode
   :config
   (setq which-key-idle-delay 0.3))
+(use-package hydra)
+
+;;;; evil
 (use-package evil
   :ensure t
   :init
@@ -92,16 +99,21 @@
 
   (evil-set-initial-state 'messages-buffer-mode 'normal)
   (evil-set-initial-state 'dashboard-mode 'normal))
-(use-package evil-collection ;; evilifies a bunch of things
+
+(use-package evil-collection 
   :after evil
   :init
-  (setq evil-collection-outline-bind-tab-p t) ;; '<TAB>' cycles visibility in 'outline-minor-mode'
   ;; If I want to incrementally enable evil-collection mode-by-mode, I can do something like the following:
   ;; (setq evil-collection-mode-list nil) ;; I don't like surprises
   ;; (add-to-list 'evil-collection-mode-list 'magit) ;; evilify magit
+  (setq evil-collection-setup-minibuffer t)
+
   :config
   (global-set-key (kbd "C-z") 'evil-exit-emacs-state)
   (evil-collection-init))
+
+
+;;;; bindings
 (use-package general
   :ensure t
   :demand t
@@ -232,8 +244,6 @@
   (baz/leader-keys
     "t" '(:ignore t :wk "template")))
 
-(use-package hydra)
-;; (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
 (global-set-key (kbd "M-2") 'tab-next)
 (global-set-key (kbd "M-1") 'tab-previous)
 
@@ -250,10 +260,10 @@
   (vertico-cycle t)
   :init
   (vertico-mode))
+
 (use-package corfu
   :custom
   (corfu-auto t)
-  
   :hook
   (prog-mode . corfu-mode))
 
@@ -261,14 +271,17 @@
   ;; Persist history over Emacs restarts. Vertico sorts by history position.
   :init
   (savehist-mode))
+
 (use-package consult
   :demand t
   :ensure t)
+
 (use-package orderless
   :ensure t
   :custom
   (completion-styles '(orderless basic))
   (completion-category-overrides '((file (styles basic partial-completion)))))
+
 (use-package marginalia
   :init
   (marginalia-mode)
@@ -294,17 +307,30 @@
 
 
 ;;; ESSENTIAL TOOLS 
+;;;; dired
 (defvar dired-details-enabled t)
 
 (defun baz/toggle-dired-details()
   (if dired-details-enabled
       (setq dired-details-enabled '())
     (setq dired-details-enabled t)))
-
 (add-hook 'dired-mode-hook
 	  (lambda ()
 	    (dired-hide-details-mode)))
 
+
+;;;; magit
+(use-package magit
+  :ensure t
+  :config
+  (setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
+  :general
+  (baz/leader-keys
+    "g" '(:ignore t :wk "git")
+    "gg" '(magit-status :wk "magit status")))
+
+
+;;; org
 (use-package org
   :ensure t
   :demand t
@@ -312,7 +338,6 @@
   (setq org-auto-align-tags nil
         org-tags-column 0)
 
-  ;; todo setup
   (setq org-todo-keywords
         '((sequence "TODO(t)" "NEXT(n)" "WAIT(w)" "|" "DONE(d)" "CANCELLED")
 	  (sequence "PROJ" "|" "COMPLETED")))
@@ -359,15 +384,15 @@
 
   (defun baz/org-journal-new-entry-with-tags ()
     (call-interactively 'org-journal-new-entry)
-    (org-set-tags "diary")))
+    (org-set-tags "diary"))
 
-:general
-(baz/leader-keys
-  "nj" '(org-journal-new-entry :wk "create new entry")
-  "ng" '(org-journal-open-current-journal-file :wk "go to current journal file")
-  "nd" '(baz/org-journal-new-diary-entry :wk "create new diary entry")
-  "nt" '(baz/org-journal-new-entry-with-tags :wk "create new entry with tags")
-  "nx" '(baz/refile-journal :wk "refile to journal"))
+    :general
+    (baz/leader-keys
+    "nj" '(org-journal-new-entry :wk "create new entry")
+    "ng" '(org-journal-open-current-journal-file :wk "go to current journal file")
+    "nd" '(baz/org-journal-new-diary-entry :wk "create new diary entry")
+    "nt" '(baz/org-journal-new-entry-with-tags :wk "create new entry with tags")
+    "nx" '(baz/refile-journal :wk "refile to journal")))
 
 ;; org-crypt
 (use-package org-crypt
@@ -379,32 +404,38 @@
   (setq org-crypt-key "C0FC1B41A828E1FA")
   (setq auto-save-default nil))
 
-(use-package magit
-  :ensure t
-  :config
-  (setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
-  :general
-  (baz/leader-keys
-    "g" '(:ignore t :wk "git")
-    "gg" '(magit-status :wk "magit status")))
-
-
-
 ;;; CODE
+;;;; general 
+(use-package prog-mode
+  :config
+  (add-hook 'prog-mode-hook 'outline-minor-mode)
+  (add-hook 'prog-mode-hook 'hs-minor-mode)
+  (add-hook 'prog-mode-hook 'display-line-numbers-mode))
+
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
-(add-hook 'emacs-lisp-mode-hook
-	  (lambda ()
-	    (hs-minor-mode)))
 
-(add-hook 'prog-mode-hook #'display-line-numbers-mode)
 
+;;;; outline 
+(use-package bicycle
+  :after outline
+  :bind (:map outline-minor-mode-map
+              ([C-tab] . bicycle-cycle)
+              ([S-tab] . bicycle-cycle-global)))
+
+(use-package outline-minor-faces
+  :after outline
+  :config (add-hook 'outline-minor-mode-hook
+                    #'outline-minor-faces-mode))
+
+;;;; rainbow delimiters
 (use-package flycheck
   :diminish 'flycheck-mode
   :config 
   (add-hook 'after-init-hook #'global-flycheck-mode))
 
+;;;; load other files
 (load-file (expand-file-name
 	    "tab-config.el" user-emacs-directory))
 
@@ -414,13 +445,14 @@
 ;;(load-file (expand-file-name
 ;;	      "windows-specific.el" user-emacs-directory))
 
+;;;; custom
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(elisp-slime-nav nov which-key vertico undo-tree treeview treemacs spacious-padding rainbow-delimiters perspective org-journal org-download orderless olivetti marginalia magit lispy general flycheck evil-collection doom-modeline corfu consult)))
+   '(outline-minor-faces bicycle outshine elisp-slime-nav nov which-key vertico undo-tree treeview treemacs spacious-padding rainbow-delimiters perspective org-journal org-download orderless olivetti marginalia magit lispy general flycheck evil-collection doom-modeline corfu consult)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
