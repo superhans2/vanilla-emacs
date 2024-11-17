@@ -26,7 +26,7 @@
 
 ;;; APPEARANCE
 ;;;; font
-(defvar baz/default-font-size 220)
+(defvar baz/default-font-size 160)
 (set-face-attribute 'default nil :font "JetBrains Mono" :height baz/default-font-size)
 (set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :height baz/default-font-size)
 (set-face-attribute 'variable-pitch nil :font "JetBrains Mono" :height baz/default-font-size :weight 'regular)
@@ -330,7 +330,7 @@
     "gg" '(magit-status :wk "magit status")))
 
 
-;;; org
+;;; ORG 
 (use-package org
   :ensure t
   :demand t
@@ -408,26 +408,13 @@
 ;;;; general 
 (use-package prog-mode
   :config
-  (add-hook 'prog-mode-hook 'outline-minor-mode)
+  (add-hook 'prog-mode-hook 'outshine-mode)
   (add-hook 'prog-mode-hook 'hs-minor-mode)
   (add-hook 'prog-mode-hook 'display-line-numbers-mode))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
-
-
-;;;; outline 
-(use-package bicycle
-  :after outline
-  :bind (:map outline-minor-mode-map
-              ([C-tab] . bicycle-cycle)
-              ([S-tab] . bicycle-cycle-global)))
-
-(use-package outline-minor-faces
-  :after outline
-  :config (add-hook 'outline-minor-mode-hook
-                    #'outline-minor-faces-mode))
 
 ;;;; rainbow delimiters
 (use-package flycheck

@@ -40,10 +40,10 @@
   (progn
     ;; setting up Org tab
     (tab-rename "Org")
-    (org-journal-open-current-journal-file)
-    (evil-window-vsplit 60)
-    (other-window 1)
-    (find-file (concat org-directory "/inbox.org"))))
+    (org-journal-open-current-journal-file)))
+    ;; (evil-window-vsplit 60)
+    ;; (other-window 1)
+    ;; (find-file (concat org-directory "/inbox.org"))))
 
 ;; emacs startup hook
 (add-hook 'window-setup-hook 'baz/startup)
