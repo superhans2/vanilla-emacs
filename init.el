@@ -1,4 +1,4 @@
-;; -*- outline-blank-line: t; -*-
+;; -*- outline-blank-line: t; lexical-binding: t; -*-
 ;;; INITIAL
 (setq gc-cons-threshold (* 50 1000 1000))
 (add-hook 'emacs-startup-hook
@@ -43,7 +43,7 @@
 (use-package olivetti
   :demand t
   :init
-  (setq olivetti-body-width 80)
+  (setq olivetti-body-width 90)
   (setq olivetti-style 'fancy)
   (setq olivetti-minimum-body-width 50))
 
@@ -339,10 +339,9 @@
   (setq org-directory (concat (getenv "HOME") "/org")
 	org-notes (concat org-directory "/ZK")
 	zot-bib (concat (getenv "HOME") "/Documents/zotLib.bib"))
-
   (setq org-auto-align-tags nil
-        org-tags-column 0)
-
+        org-tags-column 0
+	org-startup-folded "fold")
   (setq org-todo-keywords
         '((sequence "TODO(t)" "NEXT(n)" "WAIT(w)" "|" "DONE(d)" "CANCELLED")
 	  (sequence "PROJ" "|" "COMPLETED")))
@@ -417,16 +416,24 @@
    ("C-c n j" . org-roam-dailies-capture-today))
   :config
   (org-roam-db-autosync-mode)
-  ;; displays buffer as a side buffer
   (add-to-list 'display-buffer-alist
-               '("\\*org-roam\\*"
-		 (display-buffer-in-side-window)
-		 (side . right)
-		 (slot . 0)
-		 (window-width . 0.33)
-		 (window-parameters . ((no-other-window . t)
-                                       (no-delete-other-windows . t)))))
-  )
+             '("\\*org-roam\\*"
+               (display-buffer-in-direction)
+               (direction . right)
+               (window-width . 0.33)
+               (window-height . fit-window-to-buffer)))
+
+  (defun baz/org-reuse-windows (&rest _args)
+    (when org-roam-buffer-current-node
+      (let ((window (get-buffer-window
+		     (get-file-buffer
+		      (org-roam-node-file org-roam-buffer-current-node)))))
+	(when window (select-window window)))))
+  (advice-add 'org-roam-node-visit :before #'baz/org-reuse-windows))
+
+
+
+
 
 (use-package org-crypt
   :ensure nil
