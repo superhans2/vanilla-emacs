@@ -290,8 +290,9 @@
 
 
 ;;; NAVIGATION
-;; using hydra to chain 
-;; todo open new bookmark with a newtab
+
+
+;;;; opening bookmark as tab
 ;; Add custom keybindings within the tab-prefix-map
 (define-key tab-prefix-map (kbd "n") 'baz/open-new-tab)
 (define-key tab-prefix-map (kbd "2") 'tab-duplicate)
@@ -302,6 +303,13 @@
     (tab-new)
     (scratch-buffer)
     (call-interactively 'bookmark-bmenu-list)))   
+
+(setq tab-bar-new-tab-choice #'get-scratch-buffer-create)
+(defun baz/load-bookmarks-after-new-tab (&rest _args)
+  (interactive)
+  (call-interactively 'bookmark-bmenu-list))
+(advice-add 'tab-bar-new-tab :after #'baz/load-bookmarks-after-new-tab)
+
 (winner-mode)
 (tab-bar-mode)  ;; TAB BAR MODE on by default 
 
@@ -422,7 +430,7 @@
                (direction . right)
                (window-width . 0.33)
                (window-height . fit-window-to-buffer)))
-
+  
   (defun baz/org-reuse-windows (&rest _args)
     (when org-roam-buffer-current-node
       (let ((window (get-buffer-window

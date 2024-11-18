@@ -3,6 +3,7 @@
   "My tab-bar helpers"
   ("j" mmk2410/tab-bar-run-journal "Org")
   ("i" baz/tab-bar-run-config "Config")
+  ("z" baz/tab-bar-run-zk "ZK")
   ("c" nil "cancel"))
 
 (global-set-key (kbd "C-c f") 'mmk2410/tab-bar/body)
@@ -35,6 +36,16 @@
   (mmk2410/tab-bar-switch-or-create
    "Config"
    (lambda () (find-file "/home/alex/vanilla-emacs/init.el"))))
+
+;; TODO need to invoke the access to org-roam-directory AFTER the org-roam package has initialised 
+;; how to do this? would I need to package these functions and then use use-package to orchestrate the run order?
+(defun baz/tab-bar-run-zk ()
+  (interactive)
+  (mmk2410/tab-bar-switch-or-create
+   "ZK"
+   (lambda () (progn
+		(find-file (concat org-notes "/index.org"))
+		(call-interactively 'org-roam-buffer-toggle)))))
 
 (defun baz/startup ()
   (progn
