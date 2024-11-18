@@ -9,17 +9,23 @@
 			     (float-time
 			      (time-subtract after-init-time before-init-time)))
 		     gcs-done)))
+
 (require 'package)
+
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
 			 ("melpa-stable" . "https://stable.melpa.org/packages/")
 			 ("org" . "https://orgmode.org/elpa/")
 			 ("elpa" . "https://elpa.gnu.org/packages/")))
+
 (package-initialize)
+
 (unless package-archive-contents
   (package-refresh-contents))
+
 ;; Initialize use-package on non-Linux platforms
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
+
 (require 'use-package)
 
 
@@ -61,12 +67,6 @@
   (tab-bar-history-mode 1)
   (setq ring-bell-function 'ignore)
   (add-to-list 'default-frame-alist '(fullscreen . maximized)))
-
-(setq org-directory (concat (getenv "HOME") "/org")
-      org-notes (concat org-directory "/ZK")
-      zot-bib (concat (getenv "HOME") "/Documents/zotLib.bib")
-      org-roam-directory org-notes)
-
 
 ;;; KEYBINDING 
 ;;;; packages
@@ -331,10 +331,15 @@
 
 
 ;;; ORG 
+
 (use-package org
   :ensure t
   :demand t
   :init
+  (setq org-directory (concat (getenv "HOME") "/org")
+	org-notes (concat org-directory "/ZK")
+	zot-bib (concat (getenv "HOME") "/Documents/zotLib.bib"))
+
   (setq org-auto-align-tags nil
         org-tags-column 0)
 
@@ -342,7 +347,10 @@
         '((sequence "TODO(t)" "NEXT(n)" "WAIT(w)" "|" "DONE(d)" "CANCELLED")
 	  (sequence "PROJ" "|" "COMPLETED")))
   (setq org-adapt-indentation nil)   ;; interacts poorly with 'evil-open-below'
-  (setq org-image-actual-width 200)
+  (setq org-agenda-files
+	(list 
+         (concat org-directory "/journal/")
+         (concat org-directory "/inbox.org")))
 
   :general
   (baz/local-leader-keys
@@ -379,6 +387,7 @@
 	org-journal-find-file #'find-file)
 
   (defun baz/org-journal-new-diary-entry ()
+    (interactive)
     (call-interactively 'org-journal-new-entry)
     (org-set-tags "diary"))
 
@@ -386,15 +395,39 @@
     (call-interactively 'org-journal-new-entry)
     (org-set-tags "diary"))
 
-    :general
-    (baz/leader-keys
+  :general
+  (baz/leader-keys
     "nj" '(org-journal-new-entry :wk "create new entry")
     "ng" '(org-journal-open-current-journal-file :wk "go to current journal file")
     "nd" '(baz/org-journal-new-diary-entry :wk "create new diary entry")
     "nt" '(baz/org-journal-new-entry-with-tags :wk "create new entry with tags")
     "nx" '(baz/refile-journal :wk "refile to journal")))
 
-;; org-crypt
+(use-package org-roam
+  :ensure t
+  :custom
+  (org-roam-directory org-notes)
+  :bind
+  (("C-c n l" . org-roam-buffer-toggle)
+   ("C-c n f" . org-roam-node-find)
+   ("C-c n g" . org-roam-graph)
+   ("C-c n i" . org-roam-node-insert)
+   ("C-c n c" . org-roam-capture)
+   ;; Dailies
+   ("C-c n j" . org-roam-dailies-capture-today))
+  :config
+  (org-roam-db-autosync-mode)
+  ;; displays buffer as a side buffer
+  (add-to-list 'display-buffer-alist
+               '("\\*org-roam\\*"
+		 (display-buffer-in-side-window)
+		 (side . right)
+		 (slot . 0)
+		 (window-width . 0.33)
+		 (window-parameters . ((no-other-window . t)
+                                       (no-delete-other-windows . t)))))
+  )
+
 (use-package org-crypt
   :ensure nil
   :after org
@@ -428,6 +461,7 @@
 
 (load-file (expand-file-name
  	    "journal-config.el" user-emacs-directory))
+
 ;; modifies all variables in above code so they apply to windows system
 ;;(load-file (expand-file-name
 ;;	      "windows-specific.el" user-emacs-directory))
@@ -438,8 +472,14 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(org-link-frame-setup
+   '((vm . vm-visit-folder-other-frame)
+     (vm-imap . vm-visit-imap-folder-other-frame)
+     (gnus . org-gnus-no-new-news)
+     (file . find-file)
+     (wl . wl-other-frame)))
  '(package-selected-packages
-   '(outline-minor-faces bicycle outshine elisp-slime-nav nov which-key vertico undo-tree treeview treemacs spacious-padding rainbow-delimiters perspective org-journal org-download orderless olivetti marginalia magit lispy general flycheck evil-collection doom-modeline corfu consult)))
+   '(emacsql org-roam outline-minor-faces bicycle outshine elisp-slime-nav nov which-key vertico undo-tree treeview treemacs spacious-padding rainbow-delimiters perspective org-journal org-download orderless olivetti marginalia magit lispy general flycheck evil-collection doom-modeline corfu consult)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
