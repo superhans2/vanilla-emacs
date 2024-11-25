@@ -28,6 +28,19 @@
 
 (require 'use-package)
 
+;; NOTE: If you want to move everything out of the ~/.emacs.d folder
+;; reliably, set `user-emacs-directory` before loading no-littering!
+;(setq user-emacs-directory "~/.cache/emacs")
+
+(use-package no-littering
+  :config
+
+
+  ;; no-littering doesn't set this by default so we must place
+  ;; auto save files in the same path as it uses for sessions
+  (setq auto-save-file-name-transforms
+	`((".*" ,(no-littering-expand-var-file-name "auto-save/") t)))
+  )
 
 
 ;;; APPEARANCE
@@ -51,10 +64,17 @@
 
 
 ;;; EMACS CONFIG 
+
 (use-package emacs
   :demand t
   :ensure nil
   :init
+
+  ;; using specific custom file
+  (setq custom-file (concat user-emacs-directory "custom.el"))
+  (when (file-exists-p custom-file)
+    (load custom-file))
+
   (defalias 'yes-or-no-p 'y-or-n-p)
   (setq bookmark-save-flag 1)
   (setq inhibit-startup-message t)
@@ -67,6 +87,7 @@
   (tab-bar-history-mode 1)
   (setq ring-bell-function 'ignore)
   (add-to-list 'default-frame-alist '(fullscreen . maximized)))
+
 
 ;;; KEYBINDING 
 ;;;; packages
@@ -112,6 +133,10 @@
   (global-set-key (kbd "C-z") 'evil-exit-emacs-state)
   (evil-collection-init))
 
+;; (general-define-key
+;;  :states '(normal)
+;;  :keymaps 'org-mode-map
+;;  "RET" #'+org/dwim-at-point)
 
 ;;;; bindings
 (use-package general
@@ -344,7 +369,7 @@
   :ensure t
   :demand t
   :init
-  (setq org-directory (concat (getenv "HOME") "/org")
+  (setq org-directory (concat (getenv "HOME") "/shared/org")
 	org-notes (concat org-directory "/ZK")
 	zot-bib (concat (getenv "HOME") "/Documents/zotLib.bib"))
   (setq org-auto-align-tags nil
@@ -480,24 +505,3 @@
 ;; modifies all variables in above code so they apply to windows system
 ;;(load-file (expand-file-name
 ;;	      "windows-specific.el" user-emacs-directory))
-
-;;;; custom
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(org-link-frame-setup
-   '((vm . vm-visit-folder-other-frame)
-     (vm-imap . vm-visit-imap-folder-other-frame)
-     (gnus . org-gnus-no-new-news)
-     (file . find-file)
-     (wl . wl-other-frame)))
- '(package-selected-packages
-   '(emacsql org-roam outline-minor-faces bicycle outshine elisp-slime-nav nov which-key vertico undo-tree treeview treemacs spacious-padding rainbow-delimiters perspective org-journal org-download orderless olivetti marginalia magit lispy general flycheck evil-collection doom-modeline corfu consult)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
