@@ -27,6 +27,7 @@
   (package-install 'use-package))
 
 (require 'use-package)
+(setq use-package-always-ensure t)
 
 ;; NOTE: If you want to move everything out of the ~/.emacs.d folder
 ;; reliably, set `user-emacs-directory` before loading no-littering!
@@ -484,7 +485,10 @@
 
 ;;; CODE
 ;;;; general 
+(use-package outshine)
+
 (use-package prog-mode
+  :ensure nil
   :config
   (add-hook 'prog-mode-hook 'outshine-mode)
   (add-hook 'prog-mode-hook 'hs-minor-mode)
