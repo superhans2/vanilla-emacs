@@ -369,6 +369,18 @@
     "gg" '(magit-status :wk "magit status")))
 
 
+;;;; snippets
+(use-package yasnippet
+  :hook
+  (org-mode . yas-minor-mode))
+
+(use-package doom-snippets
+  :load-path "~/vanilla-emacs/local-packages/snippets"
+  :after yasnippet
+  :config
+  ;; FIXME why does linter complain that this might not be defined at runtime?
+  (yas-reload-all))
+
 ;;; ORG 
 
 (use-package org
