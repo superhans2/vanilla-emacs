@@ -422,10 +422,32 @@
   (defun my-org-mode-setup ()
     "Custom configurations for `org-mode`."
     (add-hook 'before-save-hook 'delete-trailing-whitespace nil t))
-  (add-hook 'org-mode-hook 'my-org-mode-setup))
+  (add-hook 'org-mode-hook 'my-org-mode-setup)
+
+;;;; beautifying org-mode
+  ;; use org-bullets
+  (require 'org-bullets)
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+
+  ;;
+  ;; Increase line spacing
+  ;; (setq line-spacing 2)
+
+
+  ;;(add-hook 'org-mode-hook (lambda () (org-indent-mode 1)))
+  (setq-default org-startup-indented t
+		org-pretty-entities t
+		;; org-use-sub-superscripts "{}"
+		org-hide-emphasis-markers t
+		org-startup-with-inline-images t
+		org-image-actual-width '(300)))
+
+(use-package org-bullets)
+
+  
+;;;; org journal
 
 (use-package org-journal
-  :ensure t
   :config
   (setq org-journal-dir (concat org-directory "/journal")
 	org-journal-file-type 'monthly
@@ -445,10 +467,16 @@
     (call-interactively 'org-journal-new-entry)
     (org-set-tags "diary"))
 
+  (defun baz/org-journal-narrow-today ()
+    (interactive)
+    (call-interactively 'org-journal-open-current-journal-file)
+    (call-interactively 'org-narrow-to-subtree))
+
   :general
   (baz/leader-keys
     "nj" '(org-journal-new-entry :wk "create new entry")
     "ng" '(org-journal-open-current-journal-file :wk "go to current journal file")
+    "nn" '(baz/org-journal-narrow-today :wk "go to current journal file")
     "nd" '(baz/org-journal-new-diary-entry :wk "create new diary entry")
     "nt" '(baz/org-journal-new-entry-with-tags :wk "create new entry with tags")
     "nx" '(baz/refile-journal :wk "refile to journal")))
