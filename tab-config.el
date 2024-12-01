@@ -51,7 +51,7 @@
   (progn
     ;; setting up Org tab
     (tab-rename "Org")
-    (org-journal-open-current-journal-file)))
+    (baz/org-journal-narrow-today)))
     ;; (evil-window-vsplit 60)
     ;; (other-window 1)
     ;; (find-file (concat org-directory "/inbox.org"))))
