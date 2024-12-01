@@ -495,6 +495,13 @@
   (setq org-crypt-key "C0FC1B41A828E1FA")
   (setq auto-save-default nil))
 
+;;; modeline mode
+(use-package doom-modeline
+  :init
+  (doom-modeline-mode 1)
+  :config
+  (setq doom-modeline-minor-modes t))
+
 ;;; CODE
 ;;;; general 
 (use-package outshine)
