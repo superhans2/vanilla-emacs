@@ -481,6 +481,8 @@
     "nt" '(baz/org-journal-new-entry-with-tags :wk "create new entry with tags")
     "nx" '(baz/refile-journal :wk "refile to journal")))
 
+;;;; org-roam 
+
 (use-package org-roam
   :ensure t
   :custom
@@ -510,9 +512,14 @@
 	(when window (select-window window)))))
   (advice-add 'org-roam-node-visit :before #'baz/org-reuse-windows))
 
+;;;; org-download
 
+(use-package org-download
+  :config
+  (setq-default org-link-file-path-type 'absolute)
+  (setq-default org-download-image-dir "~/org/data"))
 
-
+;;;; org-crypt
 
 (use-package org-crypt
   :ensure nil
