@@ -437,6 +437,7 @@
   ;;(add-hook 'org-mode-hook (lambda () (org-indent-mode 1)))
   (setq-default org-startup-indented t
 		org-pretty-entities t
+		;; org-fontify-quote-and-verse-blocks t
 		;; org-use-sub-superscripts "{}"
 		org-hide-emphasis-markers t
 		org-startup-with-inline-images t
@@ -469,8 +470,13 @@
 
   (defun baz/org-journal-narrow-today ()
     (interactive)
-    (call-interactively 'org-journal-open-current-journal-file)
-    (call-interactively 'org-narrow-to-subtree))
+    (let ((current-prefix-arg '(4)))  ;; Simulate C-u
+      (call-interactively 'org-journal-new-entry))
+    (call-interactively 'outline-up-heading)
+    (call-interactively 'org-narrow-to-subtree)
+    )
+  (baz/org-journal-narrow-today)
+
 
   :general
   (baz/leader-keys
