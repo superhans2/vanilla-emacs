@@ -381,6 +381,7 @@
   ;; FIXME why does linter complain that this might not be defined at runtime?
   (yas-reload-all))
 
+
 ;;; ORG 
 
 (use-package org
@@ -522,8 +523,9 @@
 
 (use-package org-download
   :config
-  (setq-default org-link-file-path-type 'absolute)
-  (setq-default org-download-image-dir "~/org/data"))
+  (setq-default org-link-file-path-type 'relative)
+  (setq-default org-download-image-dir "./data")
+  (setq-default org-download-annotate-function (lambda (_) "")))
 
 ;;;; org-crypt
 
@@ -535,6 +537,17 @@
   (setq org-crypt-tag-matcher "crypt|diary")
   (setq org-crypt-key "C0FC1B41A828E1FA")
   (setq auto-save-default nil))
+
+;;;; auto-saving
+(use-package super-save
+  :ensure t
+  :config
+  (super-save-mode +1)
+  (setq super-save-auto-save-when-idle t)
+  (add-to-list 'super-save-predicates (lambda ()
+					(if (buffer-file-name)
+                                            (string-match-p "org" (buffer-file-name))
+                                          nil))))
 
 ;;; modeline mode
 (use-package doom-modeline
