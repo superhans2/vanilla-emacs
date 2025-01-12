@@ -406,6 +406,7 @@
 	 (concat org-directory "/projects/")
          (concat org-directory "/inbox.org")))
 
+
   :general
   (baz/local-leader-keys
     :keymaps 'org-mode-map
@@ -421,6 +422,19 @@
   (org-mode . olivetti-mode)
   (org-mode . variable-pitch-mode)
   :config
+
+  (setq org-agenda-custom-commands
+        '(("n" "TODOs sorted by priority (with priority only)"
+           ((todo "TODO" ;; "+TODO=\"TODO\"|TODO=\"WAIT\""
+           ((org-agenda-sorting-strategy '(priority-down))
+	    (org-agenda-skip-function
+             '(org-agenda-skip-entry-if 'notregexp "#."))))
+	    (todo "WAIT")
+	    (todo "TODO"
+           ((org-agenda-skip-function
+             '(org-agenda-skip-entry-if 'regexp "#.")))))
+           )))
+
   ;; annoying problem where org-journal breaks if I don't remove trailing whitespace
   ;; doom does this automatically not clear where
   (defun my-org-mode-setup ()
