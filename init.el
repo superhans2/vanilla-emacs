@@ -249,6 +249,7 @@
   (baz/leader-keys
     "o" '(:ignore t :wk "open")
     "o-" '(dired-jump :wk "open in dired")
+    "oa" '(org-agenda :wk "org agenda")
     "os" '(speedbar t :wk "speedbar")) ;; TODO this needs some love
 
   ;; toggle
@@ -401,6 +402,8 @@
   (setq org-agenda-files
 	(list 
          (concat org-directory "/journal/")
+	 (concat org-directory "/scrap.org")
+	 (concat org-directory "/projects/")
          (concat org-directory "/inbox.org")))
 
   :general
@@ -548,6 +551,11 @@
 					(if (buffer-file-name)
                                             (string-match-p "org" (buffer-file-name))
                                           nil))))
+
+;;;; org diary publish mode
+;; TODO a mode to publish 
+;; TODO a function to tangle TODO comments into their own
+;; org agenda items
 
 ;;; modeline mode
 (use-package doom-modeline
