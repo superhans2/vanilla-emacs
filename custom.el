@@ -11,7 +11,7 @@
      (file . find-file)
      (wl . wl-other-frame)))
  '(package-selected-packages
-   '(minimap vterm super-save fontaine org-modern org-bullets yasnippet which-key vertico rich-minority rainbow-delimiters outshine org-roam org-journal org-download orderless olivetti no-littering moody minions marginalia magit hydra hide-mode-line general flycheck evil-collection doom-modeline diminish corfu consult all-the-icons))
+   '(smartparens minimap vterm super-save fontaine org-modern org-bullets yasnippet which-key vertico rich-minority rainbow-delimiters outshine org-roam org-journal org-download orderless olivetti no-littering moody minions marginalia magit hydra hide-mode-line general flycheck evil-collection doom-modeline diminish corfu consult all-the-icons))
  '(safe-local-variable-values '((auto-revert-mode . t))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

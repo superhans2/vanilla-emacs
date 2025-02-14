@@ -210,6 +210,7 @@
     "b" '(:ignore t :wk "buffer")
     "bb" '(consult-buffer :wk "switch buffer") ;; gets overridden by consult
     "bk" '(kill-this-buffer :wk "kill this buffer")
+    "bi" '(ibuffer :wk "ibuffer")
     "br" '(revert-buffer :wk "reload buffer"))
 
   ;; bookmark
@@ -495,6 +496,14 @@
     )
   (baz/org-journal-narrow-today)
 
+  ;; (defun baz/org-journal-new-entry()
+  ;;   """ copying org-journal functionality for adding new journal entry"""
+  ;;   (interactive)
+  ;;   (let* (now (decode-time nil))
+  ;;     )
+    
+  ;;   )
+
 
   :general
   (baz/leader-keys
@@ -589,11 +598,16 @@
   (add-hook 'prog-mode-hook 'hs-minor-mode)
   (add-hook 'prog-mode-hook 'display-line-numbers-mode))
 
+(define-key emacs-lisp-mode-map (kbd "<backtab>") 'outshine-cycle-buffer)
+
+;;;; parens 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
+(electric-pair-mode 1)
 
-;;;; rainbow delimiters
+
+;;;; flycheck mode
 (use-package flycheck
   :diminish 'flycheck-mode
   :config 
