@@ -443,6 +443,7 @@
     (add-hook 'before-save-hook 'delete-trailing-whitespace nil t))
   (add-hook 'org-mode-hook 'my-org-mode-setup)
   
+
 ;;;; dwim
 
 (load-file "/home/alex/doomemacs/modules/lang/org/autoload/org.el")
@@ -475,6 +476,32 @@
 (use-package org-bullets)
 
   
+
+;;;; bibliography management 
+(use-package citar
+  :no-require
+  :custom
+  (org-cite-global-bibliography '("~/Documents/zotLib.bib"))
+  (org-cite-insert-processor 'citar)
+  (org-cite-follow-processor 'citar)
+  (org-cite-activate-processor 'citar)
+  (citar-bibliography org-cite-global-bibliography)
+  ;; optional: org-cite-insert is also bound to C-c C-x C-@
+  :bind
+  (:map org-mode-map :package org ("C-c b" . #'org-cite-insert)))
+
+(use-package openwith
+  :config
+  (setq openwith-associations
+        (list
+         (list (openwith-make-extension-regexp
+                '("pdf"))
+               "okular"
+               '(file))
+         ))
+  :init
+  (openwith-mode 1))
+
 
 ;;;; org journal
 
