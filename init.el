@@ -406,6 +406,27 @@
 	 (concat org-directory "/scrap.org")
 	 (concat org-directory "/projects/")
          (concat org-directory "/inbox.org")))
+  (setq org-tag-alist '(
+			;; ticket types
+			("kindling")
+			("recipe")
+			("diary")
+			("crypt")
+			("emacs")
+			("van")
+			("therapy")
+			("poem")
+			("music")
+			("makeup")
+			("linux")
+			("phd")
+			("fix")
+			("clothing")
+			("password")
+			("tech")
+			("therapy")
+			("bee")
+			))
 
 
   :general
@@ -528,11 +549,12 @@
 
   (defun baz/org-journal-narrow-today ()
     (interactive)
-    (let ((current-prefix-arg '(4)))  ;; Simulate C-u
-      (call-interactively 'org-journal-new-entry))
-      (call-interactively 'outline-up-heading)
-    (call-interactively 'org-narrow-to-subtree)
-    )
+    (let ((current-prefix-arg '(4)))
+      (progn
+	(call-interactively 'org-journal-new-entry)
+	;; (call-interactively 'clone-indirect-buffer)
+	;; (org-narrow-to-subtree)
+	)))
   ;; (baz/org-journal-narrow-today)
 
 
@@ -551,14 +573,18 @@
   :ensure t
   :custom
   (org-roam-directory org-notes)
-  :bind
-  (("C-c n l" . org-roam-buffer-toggle)
-   ("C-c n f" . org-roam-node-find)
-   ("C-c n g" . org-roam-graph)
-   ("C-c n i" . org-roam-node-insert)
-   ("C-c n c" . org-roam-capture)
-   ;; Dailies
-   ("C-c n j" . org-roam-dailies-capture-today))
+  :general
+  (baz/leader-keys
+    "nf" '(org-roam-node-find :wk "find roam note")
+    "nl" '(org-roam-buffer-toggle :wk "toggle backlink buffer")
+    "nc" '(org-roam-capture)
+    "ni" '(org-roam-node-insert))
+  ;; :bind
+  ;; (("C-c n l" . org-roam-buffer-toggle)
+  ;;  ("C-c n f" . org-roam-node-find)
+  ;;  ("C-c n g" . org-roam-graph)
+  ;;  ("C-c n i" . org-roam-node-insert)
+  ;;  ("C-c n c" . org-roam-capture))
   :config
   (org-roam-db-autosync-mode)
   (add-to-list 'display-buffer-alist
@@ -606,17 +632,12 @@
                                             (string-match-p "org" (buffer-file-name))
                                           nil))))
 
-;;;; org diary publish mode
-;; TODO a mode to publish 
-;; TODO a function to tangle TODO comments into their own
-;; org agenda items
-
 ;;; modeline mode
-(use-package doom-modeline
-  :init
-  (doom-modeline-mode 1)
-  :config
-  (setq doom-modeline-minor-modes t))
+;; (use-package doom-modeline
+;;   :init
+;;   (doom-modeline-mode 1)
+;;   :config
+;;   (setq doom-modeline-minor-modes t))
 
 ;;; CODE
 ;;;; general 
@@ -644,13 +665,73 @@
   :config 
   (add-hook 'after-init-hook #'global-flycheck-mode))
 
-;;;; load other files
-(load-file (expand-file-name
-	    "tab-config.el" user-emacs-directory))
+;;; Tab Config
 
+;; copying tab bar navigation code 
+(defhydra mmk2410/tab-bar (:color teal) 
+  "My tab-bar helpers"
+  ("j" mmk2410/tab-bar-run-journal "Org")
+  ("i" baz/tab-bar-run-config "Config")
+  ("z" baz/tab-bar-run-zk "ZK")
+  ("c" nil "cancel"))
+
+(defun mmk2410/tab-bar-switch-or-create (name func)
+  (if (mmk2410/tab-bar-tab-exists name)
+      (tab-bar-switch-to-tab name)
+    (mmk2410/tab-bar-new-tab name func)))
+
+(defun mmk2410/tab-bar-tab-exists (name)
+  (member name
+          (mapcar #'(lambda (tab) (alist-get 'name tab))
+                  (tab-bar-tabs))))
+
+(defun mmk2410/tab-bar-new-tab (name func)
+  (when (eq nil tab-bar-mode)
+    (tab-bar-mode))
+  (tab-bar-new-tab)
+  (tab-bar-rename-tab name)
+  (funcall func))
+
+(defun mmk2410/tab-bar-run-journal ()
+  (interactive)
+  (mmk2410/tab-bar-switch-or-create
+   "Org"
+   #'baz/org-journal-narrow-today))
+
+(defun baz/tab-bar-run-config ()
+  (interactive)
+  (mmk2410/tab-bar-switch-or-create
+   "Config"
+   (lambda () (find-file "/home/alex/vanilla-emacs/init.el"))))
+
+;; TODO need to invoke the access to org-roam-directory AFTER the org-roam package has initialised 
+;; how to do this? would I need to package these functions and then use use-package to orchestrate the run order?
+(defun baz/tab-bar-run-zk ()
+  (interactive)
+  (mmk2410/tab-bar-switch-or-create
+   "ZK"
+   (lambda () (progn
+		(find-file (concat org-notes "/index.org"))
+		(call-interactively 'org-roam-buffer-toggle)))))
+
+(defun baz/startup ()
+  (progn
+    ;; setting up Org tab
+    (mmk2410/tab-bar-run-journal)
+    (baz/tab-bar-run-zk)
+    (baz/tab-bar-run-config)
+    (tab-bar-close-tab-by-name "*scratch*")
+    (tab-bar-switch-to-tab "Org")))
+
+    ;; (tab-rename "Org")
+    ;; (baz/org-journal-narrow-today)))
+    ;; (find-file (concat org-directory "/inbox.org"))))
+
+;; emacs startup hook
+(add-hook 'window-setup-hook 'baz/startup)
+
+
+;;; journal config 
 (load-file (expand-file-name
  	    "journal-config.el" user-emacs-directory))
 
-;; modifies all variables in above code so they apply to windows system
-;;(load-file (expand-file-name
-;;	      "windows-specific.el" user-emacs-directory))
