@@ -210,7 +210,7 @@
   (baz/leader-keys
     "b" '(:ignore t :wk "buffer")
     "bb" '(consult-buffer :wk "switch buffer") ;; gets overridden by consult
-    "bk" '(kill-this-buffer :wk "kill this buffer")
+    "bk" '(kill-current-buffer :wk "kill this buffer")
     "bi" '(ibuffer :wk "ibuffer")
     "br" '(revert-buffer :wk "reload buffer"))
 
@@ -375,12 +375,12 @@
   :hook
   (org-mode . yas-minor-mode))
 
-(use-package doom-snippets
-  :load-path "~/vanilla-emacs/local-packages/snippets"
-  :after yasnippet
-  :config
-  ;; FIXME why does linter complain that this might not be defined at runtime?
-  (yas-reload-all))
+;; (use-package doom-snippets
+;;   :load-path "~/vanilla-emacs/local-packages/snippets"
+;;   :after yasnippet
+;;   :config
+;;   ;; FIXME why does linter complain that this might not be defined at runtime?
+;;   (yas-reload-all))
 
 
 ;;; ORG 
@@ -400,6 +400,7 @@
         '((sequence "TODO(t)" "NEXT(n)" "WAIT(w)" "|" "DONE(d)" "CANCELLED")
 	  (sequence "PROJ" "|" "COMPLETED")))
   (setq org-adapt-indentation nil)   ;; interacts poorly with 'evil-open-below'
+
   (setq org-agenda-files
 	(list 
          (concat org-directory "/journal/")
@@ -445,6 +446,9 @@
   (org-mode . variable-pitch-mode)
   :config
 
+  (setq org-attach-dir-relative t
+	org-attach-store-link-p 'file)
+
   (setq org-agenda-custom-commands
         '(("n" "TODOs sorted by priority (with priority only)"
            ((todo "TODO" ;; "+TODO=\"TODO\"|TODO=\"WAIT\""
@@ -477,10 +481,9 @@
 
 ;;;; beautifying org-mode
   ;; use org-bullets
-  (require 'org-bullets)
-  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+  ;;(require 'org-bullets)
+  ;; (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 
-  ;;
   ;; Increase line spacing
   ;; (setq line-spacing 2)
 
@@ -577,8 +580,8 @@
   (baz/leader-keys
     "nf" '(org-roam-node-find :wk "find roam note")
     "nl" '(org-roam-buffer-toggle :wk "toggle backlink buffer")
-    "nc" '(org-roam-capture)
-    "ni" '(org-roam-node-insert))
+    "nc" '(org-roam-capture :wk "org roam capture")
+    "ni" '(org-roam-node-insert :wk "org roam insert"))
   ;; :bind
   ;; (("C-c n l" . org-roam-buffer-toggle)
   ;;  ("C-c n f" . org-roam-node-find)
@@ -602,13 +605,12 @@
 	(when window (select-window window)))))
   (advice-add 'org-roam-node-visit :before #'baz/org-reuse-windows))
 
-;;;; org-download
+;;;; org-attach
+;; (setq org-attach-dir-relative t
+;;       org-attach-store-link-p 'file
+;;       org-attach-preferred-new-method 'id
+;;      )
 
-(use-package org-download
-  :config
-  (setq-default org-link-file-path-type 'relative)
-  (setq-default org-download-image-dir "./data")
-  (setq-default org-download-annotate-function (lambda (_) "")))
 
 ;;;; org-crypt
 
@@ -653,8 +655,8 @@
 (define-key emacs-lisp-mode-map (kbd "<backtab>") 'outshine-cycle-buffer)
 
 ;;;; parens 
-(use-package rainbow-delimiters
-  :hook (prog-mode . rainbow-delimiters-mode))
+;;;; (use-package rainbow-delimiters
+;;;;   :hook (prog-mode . rainbow-delimiters-mode))
 
 (electric-pair-mode 1)
 
