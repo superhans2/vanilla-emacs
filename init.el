@@ -80,7 +80,7 @@
   (setq bookmark-save-flag 1)
   (setq inhibit-startup-message t)
   (setq make-backup-files nil)
-  (cua-mode)
+  ;; (cua-mode)
   (auto-save-mode -1)
   (scroll-bar-mode -1)
   (tool-bar-mode -1)
@@ -446,9 +446,6 @@
   (org-mode . variable-pitch-mode)
   :config
 
-  (setq org-attach-dir-relative t
-	org-attach-store-link-p 'file)
-
   (setq org-agenda-custom-commands
         '(("n" "TODOs sorted by priority (with priority only)"
            ((todo "TODO" ;; "+TODO=\"TODO\"|TODO=\"WAIT\""
@@ -502,6 +499,11 @@
   
 
 ;;;; bibliography management 
+;; (setq! citar-bibliography (list zot-bib)
+;;          citar-notes-paths (list (concat org-notes "/references/"))
+;;          org-cite-global-bibliography citar-bibliography
+;;          citar-at-point-function 'embark-act
+;;          citar-file-open-function 'citar-file-open-external)
 (use-package citar
   :no-require
   :custom
@@ -510,9 +512,16 @@
   (org-cite-follow-processor 'citar)
   (org-cite-activate-processor 'citar)
   (citar-bibliography org-cite-global-bibliography)
+  :config
+  (setq
+   citar-notes-paths (list (concat org-notes "/references/")))
   ;; optional: org-cite-insert is also bound to C-c C-x C-@
   :bind
   (:map org-mode-map :package org ("C-c b" . #'org-cite-insert)))
+
+(use-package citar-org-roam
+  :after (citar org-roam)
+  :config (citar-org-roam-mode))
 
 (use-package openwith
   :config
@@ -582,12 +591,12 @@
     "nl" '(org-roam-buffer-toggle :wk "toggle backlink buffer")
     "nc" '(org-roam-capture :wk "org roam capture")
     "ni" '(org-roam-node-insert :wk "org roam insert"))
-  ;; :bind
-  ;; (("C-c n l" . org-roam-buffer-toggle)
-  ;;  ("C-c n f" . org-roam-node-find)
-  ;;  ("C-c n g" . org-roam-graph)
-  ;;  ("C-c n i" . org-roam-node-insert)
-  ;;  ("C-c n c" . org-roam-capture))
+  :bind
+  (("C-c n l" . org-roam-buffer-toggle)
+   ("C-c n g" . org-roam-graph)
+   ("C-c f" . org-roam-node-find)
+   ("C-c i" . org-roam-node-insert)
+   ("C-c n c" . org-roam-capture))
   :config
   (org-roam-db-autosync-mode)
   (add-to-list 'display-buffer-alist
@@ -596,21 +605,33 @@
                (direction . right)
                (window-width . 0.33)
                (window-height . fit-window-to-buffer)))
-  
-  (defun baz/org-reuse-windows (&rest _args)
-    (when org-roam-buffer-current-node
-      (let ((window (get-buffer-window
-		     (get-file-buffer
-		      (org-roam-node-file org-roam-buffer-current-node)))))
-	(when window (select-window window)))))
-  (advice-add 'org-roam-node-visit :before #'baz/org-reuse-windows))
+  )
+
+;; fixing issue where org-roam splits window
+(defun +org-roam-reuse-windows (&rest r)
+  (when org-roam-buffer-current-node
+    (let ((window (get-buffer-window
+                    (get-file-buffer
+                      (org-roam-node-file org-roam-buffer-current-node)))))
+      (when window (select-window window)))))
+
+(advice-add 'org-roam-preview-visit :before #'+org-roam-reuse-windows)
+(advice-add 'org-roam-node-visit :before #'+org-roam-reuse-windows)
+
+
+
+  ;;:before #'org-roam-preview-visit
+  ;;:before #'org-roam-node-visit
 
 ;;;; org-attach
-;; (setq org-attach-dir-relative t
-;;       org-attach-store-link-p 'file
-;;       org-attach-preferred-new-method 'id
-;;      )
+(setq org-attach-dir-relative t
+    org-attach-store-link-p 'file
+    org-yank-dnd-method 'attach
+    org-attach-use-inheritance t)
 
+(defun my/attach-using-file-link (url action separator)
+  (require 'org)
+  )
 
 ;;;; org-crypt
 
