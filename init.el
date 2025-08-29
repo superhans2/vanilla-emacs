@@ -418,45 +418,47 @@
 ;;;; org journal
 
 (use-package org-journal
-  :config
-  (setq org-journal-dir (concat org-directory "/journal")
-	org-journal-file-type 'monthly
-	org-journal-file-format "%Y-%m.org"
-	org-journal-enable-agenda-integration nil    ;; TODO change this at some point
-	org-extend-today-until 4
-	org-journal-carryover-items ""
-	org-journal-date-format "%a, %Y-%m-%d"
-	;; org-journal-enable-encryption t
-	org-journal-find-file #'find-file)
+   :config
+  ;; (setq org-journal-dir (concat org-directory "/journal")
+  ;;       org-journal-file-type 'monthly
+  ;;       org-journal-file-format "%Y-%m.org"
+  ;;       org-journal-enable-agenda-integration nil    ;; TODO change this at some point
+  ;;       org-extend-today-until 4
+  ;;       org-journal-carryover-items ""
+  ;;       org-journal-date-format "%a, %Y-%m-%d"
+  ;;       ;; org-journal-enable-encryption t
+  ;;       org-journal-find-file #'find-file)
 
-  (defun baz/org-journal-new-diary-entry ()
-    (interactive)
-    (call-interactively 'org-journal-new-entry)
-    (org-set-tags "diary"))
+  ;; (defun baz/org-journal-new-diary-entry ()
+  ;;   (interactive)
+  ;;   (call-interactively 'org-journal-new-entry)
+  ;;   (org-set-tags "diary"))
 
-  (defun baz/org-journal-new-entry-with-tags ()
-    (call-interactively 'org-journal-new-entry)
-    (org-set-tags "diary"))
+  ;; (defun baz/org-journal-new-entry-with-tags ()
+  ;;   (call-interactively 'org-journal-new-entry)
+  ;;   (org-set-tags "diary"))
 
+   ;; TODO remove this crap
   (defun baz/org-journal-narrow-today ()
     (interactive)
     (let ((current-prefix-arg '(4)))
       (progn
-	(call-interactively 'org-journal-new-entry)
-	;; (call-interactively 'clone-indirect-buffer)
-	;; (org-narrow-to-subtree)
-	)))
+        (call-interactively 'org-journal-new-entry)
+        ;; (call-interactively 'clone-indirect-buffer)
+        ;; (org-narrow-to-subtree)
+        )))
   ;; (baz/org-journal-narrow-today)
 
 
   :general
   (baz/leader-keys
     "nj" '(org-journal-new-entry :wk "create new entry")
-    "ng" '(org-journal-open-current-journal-file :wk "go to current journal file")
-    "nn" '(baz/org-journal-narrow-today :wk "go to current journal file")
-    "nd" '(baz/org-journal-new-diary-entry :wk "create new diary entry")
-    "nt" '(baz/org-journal-new-entry-with-tags :wk "create new entry with tags")
-    "nx" '(baz/refile-journal :wk "refile to journal")))
+    ;; "ng" '(org-journal-open-current-journal-file :wk "go to current journal file")
+    ;; "nn" '(baz/org-journal-narrow-today :wk "go to current journal file")
+    ;; "nd" '(baz/org-journal-new-diary-entry :wk "create new diary entry")
+    ;; "nt" '(baz/org-journal-new-entry-with-tags :wk "create new entry with tags")
+    ;;"nx" '(baz/refile-journal :wk "refile to journal")))
+    ))
 
 ;;;; org-roam 
 
