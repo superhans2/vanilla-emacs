@@ -51,17 +51,10 @@
 (set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :height baz/default-font-size)
 (set-face-attribute 'variable-pitch nil :font "JetBrains Mono" :height baz/default-font-size :weight 'regular)
 (load-theme 'modus-vivendi)
-(define-key global-map (kbd "<f5>") #'modus-themes-toggle)
 
 ;;;; olivetti
-(use-package olivetti
-  :demand t
-  :init
-  (setq olivetti-body-width 90)
-  (setq olivetti-style 'fancy)
-  (setq olivetti-minimum-body-width 50))
 
-(setq-default line-spacing 4)
+;; TODO what does this do? (setq-default line-spacing 4)
 
 
 ;;; EMACS CONFIG 
@@ -375,98 +368,11 @@
   :hook
   (org-mode . yas-minor-mode))
 
-;; (use-package doom-snippets
-;;   :load-path "~/vanilla-emacs/local-packages/snippets"
-;;   :after yasnippet
-;;   :config
-;;   ;; FIXME why does linter complain that this might not be defined at runtime?
-;;   (yas-reload-all))
-
-
 ;;; ORG 
-;;;; general 
+;;;; general
 
-(use-package org
-  :ensure t
-  :demand t
-  :init
-  (setq org-directory (concat (getenv "HOME") "/shared/org")
-	org-notes (concat org-directory "/ZK")
-	zot-bib (concat (getenv "HOME") "/Documents/zotLib.bib"))
-  (setq org-auto-align-tags nil
-        org-tags-column 0
-	org-startup-folded "fold")
-  (setq org-todo-keywords
-        '((sequence "TODO(t)" "NEXT(n)" "WAIT(w)" "|" "DONE(d)" "CANCELLED")
-	  (sequence "PROJ" "|" "COMPLETED")))
-  (setq org-adapt-indentation nil)   ;; interacts poorly with 'evil-open-below'
-
-  (setq org-agenda-files
-	(list 
-         (concat org-directory "/journal/")
-	 (concat org-directory "/scrap.org")
-	 (concat org-directory "/projects/")
-         (concat org-directory "/inbox.org")))
-  (setq org-tag-alist '(
-			;; ticket types
-			("kindling")
-			("recipe")
-			("diary")
-			("crypt")
-			("emacs")
-			("van")
-			("therapy")
-			("poem")
-			("music")
-			("makeup")
-			("linux")
-			("phd")
-			("fix")
-			("clothing")
-			("password")
-			("tech")
-			("therapy")
-			("bee")
-			))
-
-
-  :general
-  (baz/local-leader-keys
-    :keymaps 'org-mode-map
-    "a" '(org-archive-subtree :wk "archive")
-    "d" '(org-decrypt-entry :wk "decrypt org entry")
-    "t" '(org-todo :wk "todo")
-    "s" '(org-insert-structure-template :wk "template")
-    "e" '(org-edit-special :wk "edit")
-    ">" '(org-demote-subtree :wk "demote subtree")
-    "<" '(org-promote-subtree :wk "demote subtree"))
-
-  :hook
-  (org-mode . olivetti-mode)
-  (org-mode . variable-pitch-mode)
-  :config
-
-  (setq org-agenda-custom-commands
-        '(("n" "TODOs sorted by priority (with priority only)"
-           ((todo "TODO" ;; "+TODO=\"TODO\"|TODO=\"WAIT\""
-           ((org-agenda-sorting-strategy '(priority-down))
-	    (org-agenda-skip-function
-             '(org-agenda-skip-entry-if 'notregexp "#."))))
-	    (todo "WAIT")
-	    (todo "TODO"
-           ((org-agenda-skip-function
-             '(org-agenda-skip-entry-if 'regexp "#.")))))
-           )))
-
-  ;; annoying problem where org-journal breaks if I don't remove trailing whitespace
-  ;; doom does this automatically not clear where
-  (defun my-org-mode-setup ()
-    "Custom configurations for `org-mode`."
-    (add-hook 'before-save-hook 'delete-trailing-whitespace nil t))
-  (add-hook 'org-mode-hook 'my-org-mode-setup)
-  
-
-;;;; dwim
+(load-file (expand-file-name
+ 	    "shared.el" user-emacs-directory))
 
 (load-file "/home/alex/doomemacs/modules/lang/org/autoload/org.el")
 
@@ -475,35 +381,8 @@
  :keymaps 'org-mode-map
  "RET" #'+org/dwim-at-point)
 
-
-;;;; beautifying org-mode
-  ;; use org-bullets
-  ;;(require 'org-bullets)
-  ;; (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-
-  ;; Increase line spacing
-  ;; (setq line-spacing 2)
-
-
-  ;;(add-hook 'org-mode-hook (lambda () (org-indent-mode 1)))
-  (setq-default org-startup-indented t
-		org-pretty-entities t
-		;; org-fontify-quote-and-verse-blocks t
-		;; org-use-sub-superscripts "{}"
-		org-hide-emphasis-markers t
-		org-startup-with-inline-images t
-		org-image-actual-width '(300)))
-
 (use-package org-bullets)
 
-  
-
-;;;; bibliography management 
-;; (setq! citar-bibliography (list zot-bib)
-;;          citar-notes-paths (list (concat org-notes "/references/"))
-;;          org-cite-global-bibliography citar-bibliography
-;;          citar-at-point-function 'embark-act
-;;          citar-file-open-function 'citar-file-open-external)
 (use-package citar
   :no-require
   :custom
@@ -587,10 +466,10 @@
   (org-roam-directory org-notes)
   :general
   (baz/leader-keys
-    "nf" '(org-roam-node-find :wk "find roam note")
-    "nl" '(org-roam-buffer-toggle :wk "toggle backlink buffer")
-    "nc" '(org-roam-capture :wk "org roam capture")
-    "ni" '(org-roam-node-insert :wk "org roam insert"))
+   "nf" '(org-roam-node-find :wk "find roam note")
+   "nl" '(org-roam-buffer-toggle :wk "toggle backlink buffer")
+   "nc" '(org-roam-capture :wk "org roam capture")
+   "ni" '(org-roam-node-insert :wk "org roam insert"))
   :bind
   (("C-c n l" . org-roam-buffer-toggle)
    ("C-c n g" . org-roam-graph)
@@ -600,11 +479,11 @@
   :config
   (org-roam-db-autosync-mode)
   (add-to-list 'display-buffer-alist
-             '("\\*org-roam\\*"
-               (display-buffer-in-direction)
-               (direction . right)
-               (window-width . 0.33)
-               (window-height . fit-window-to-buffer)))
+               '("\\*org-roam\\*"
+                 (display-buffer-in-direction)
+                 (direction . right)
+                 (window-width . 0.33)
+                 (window-height . fit-window-to-buffer)))
   )
 
 ;; fixing issue where org-roam splits window
