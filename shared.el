@@ -1,25 +1,22 @@
 ;;; shared.el -*- lexical-binding: t; -*-
 
-;; shared config between vanill and doom
+;;; shared config between vanill and doom
 
 (define-key global-map (kbd "<f5>") #'modus-themes-toggle)
 
 
+;;; Olivetti
 (use-package olivetti
   :init
   (setq olivetti-body-width 90)
   (setq olivetti-style 'fancy)
   (setq olivetti-minimum-body-width 50))
 
-;;(add-hook 'olivetti-mode-on-hook (lambda () (olivetti-set-width body-width-default)))
-;;(add-hook! 'org-mode-hook #'olivetti-mode)
-
-;;
-;; shared org config
+;;; Org
 (use-package org
   ;;  :demand t
   :init
-  (setq org-directory (concat (getenv "HOME") "/shared/org")
+  (setq org-directory (concat (getenv "HOME") "/org")
         org-notes (concat org-directory "/ZK")
         zot-bib (concat (getenv "HOME") "/Documents/zotLib.bib"))
   (setq org-auto-align-tags nil
@@ -65,23 +62,10 @@
                         ))
 
 
-  ;; TODO fix
-  ;; :general
-  ;; (baz/local-leader-keys
-  ;;   :keymaps 'org-mode-map
-  ;;   "a" '(org-archive-subtree :wk "archive")
-  ;;   "d" '(org-decrypt-entry :wk "decrypt org entry")
-  ;;   "t" '(org-todo :wk "todo")
-  ;;   "s" '(org-insert-structure-template :wk "template")
-  ;;   "e" '(org-edit-special :wk "edit")
-  ;;   ">" '(org-demote-subtree :wk "demote subtree")
-  ;;   "<" '(org-promote-subtree :wk "demote subtree"))
-
   :hook
   (org-mode . olivetti-mode)
-  (org-mode . variable-pitch-mode)
-  :config
 
+  :config
   (setq org-agenda-custom-commands
         '(("n" "TODOs sorted by priority (with priority only)"
            ((todo "TODO" ;; "+TODO=\"TODO\"|TODO=\"WAIT\""
@@ -110,7 +94,7 @@
                 org-startup-with-inline-images t
                 org-image-actual-width '(300)))
 
-;; org-journal
+;;; org-journal
 (use-package org-journal
   :init
   (setq

@@ -2,20 +2,20 @@
 ;;; INITIAL
 (setq gc-cons-threshold (* 50 1000 1000))
 (add-hook 'emacs-startup-hook
-	  ;; Profile emacs startup
-	  (lambda ()
-	    (message "*** Emacs loaded in %s with %d garbage collections."
-		     (format "%.2f seconds"
-			     (float-time
-			      (time-subtract after-init-time before-init-time)))
-		     gcs-done)))
+          ;; Profile emacs startup
+          (lambda ()
+            (message "*** Emacs loaded in %s with %d garbage collections."
+                     (format "%.2f seconds"
+                             (float-time
+                              (time-subtract after-init-time before-init-time)))
+                     gcs-done)))
 
 (require 'package)
 
 (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-			 ("melpa-stable" . "https://stable.melpa.org/packages/")
-			 ("org" . "https://orgmode.org/elpa/")
-			 ("elpa" . "https://elpa.gnu.org/packages/")))
+                         ("melpa-stable" . "https://stable.melpa.org/packages/")
+                         ("org" . "https://orgmode.org/elpa/")
+                         ("elpa" . "https://elpa.gnu.org/packages/")))
 
 (package-initialize)
 
@@ -45,20 +45,13 @@
 
 
 ;;; APPEARANCE
-;;;; font
 (defvar baz/default-font-size 160)
 (set-face-attribute 'default nil :font "JetBrains Mono" :height baz/default-font-size)
 (set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :height baz/default-font-size)
 (set-face-attribute 'variable-pitch nil :font "JetBrains Mono" :height baz/default-font-size :weight 'regular)
 (load-theme 'modus-vivendi)
 
-;;;; olivetti
-
-;; TODO what does this do? (setq-default line-spacing 4)
-
-
 ;;; EMACS CONFIG 
-
 (use-package emacs
   :demand t
   :ensure nil
@@ -267,20 +260,16 @@
 (global-set-key (kbd "M-2") 'tab-next)
 (global-set-key (kbd "M-1") 'tab-previous)
 
-;; (defhydra hydra-text-scale (:timeout 4)
-;;   "scale text"
-;;   ("j" text-scale-increase "in")
-;;   ("k" text-scale-decrease "out"))
 
 ;;; COMPLETION FRAMEWORK
 (use-package vertico
   :ensure t
   :bind (:map vertico-map
-	      ("C-j" . vertico-next)
-	      ("C-k" . vertico-previous)
-	      ("C-f" . vertico-exit)
-	      :map minibuffer-local-map
-	      ("M-h" . backward-kill-word))
+         ("C-j" . vertico-next)
+         ("C-k" . vertico-previous)
+         ("C-f" . vertico-exit)
+         :map minibuffer-local-map
+         ("M-h" . backward-kill-word))
   :custom
   (vertico-cycle t)
   :init
@@ -348,8 +337,8 @@
       (setq dired-details-enabled '())
     (setq dired-details-enabled t)))
 (add-hook 'dired-mode-hook
-	  (lambda ()
-	    (dired-hide-details-mode)))
+          (lambda ()
+            (dired-hide-details-mode)))
 
 
 ;;;; magit
@@ -372,7 +361,25 @@
 ;;;; general
 
 (load-file (expand-file-name
- 	    "shared.el" user-emacs-directory))
+            "shared.el" user-emacs-directory))
+
+;; vanilla specific config
+(use-package org
+  :hook
+  (org-mode . variable-pitch-mode)
+
+  :general
+  (baz/local-leader-keys
+    :keymaps 'org-mode-map
+    "a" '(org-archive-subtree :wk "archive")
+    "d" '(org-decrypt-entry :wk "decrypt org entry")
+    "t" '(org-todo :wk "todo")
+    "s" '(org-insert-structure-template :wk "template")
+    "e" '(org-edit-special :wk "edit")
+    ">" '(org-demote-subtree :wk "demote subtree")
+    "<" '(org-promote-subtree :wk "demote subtree"))
+
+  )
 
 (load-file "/home/alex/doomemacs/modules/lang/org/autoload/org.el")
 
