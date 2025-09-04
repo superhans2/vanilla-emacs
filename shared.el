@@ -41,24 +41,9 @@
          (concat org-directory "/inbox.org")))
   (setq org-tag-alist '(
                         ;; ticket types
-                        ("kindling")
-                        ("recipe")
-                        ("diary")
-                        ("crypt")
-                        ("emacs")
-                        ("van")
-                        ("therapy")
-                        ("poem")
-                        ("music")
-                        ("makeup")
-                        ("linux")
-                        ("phd")
-                        ("fix")
-                        ("clothing")
-                        ("password")
-                        ("tech")
-                        ("therapy")
-                        ("bee")
+                        ("kindling") ("recipe") ("diary") ("crypt") ("emacs") ("van") ("therapy")
+                        ("poem") ("music") ("makeup") ("linux") ("phd") ("fix") ("clothing")
+                        ("password") ("tech") ("therapy") ("bee")
                         ))
 
 
@@ -108,3 +93,29 @@
       org-journal-date-format "%a, %Y-%m-%d"
       org-journal-find-file #'find-file)
   )
+
+;;; org-roam
+
+;;; supersave
+(use-package super-save
+  :config
+  (super-save-mode +1)
+  (setq super-save-auto-save-when-idle t)
+  (add-to-list 'super-save-predicates (lambda ()
+                                        (if (buffer-file-name)
+                                            (string-match-p "org" (buffer-file-name))
+                                          nil))))
+
+
+;;; open with
+(use-package openwith
+  :config
+  (setq openwith-associations
+        (list
+         (list (openwith-make-extension-regexp
+                '("pdf"))
+               "okular"
+               '(file))
+         ))
+  :init
+  (openwith-mode 1))

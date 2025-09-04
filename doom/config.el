@@ -14,8 +14,6 @@
       display-line-numbers-type nil
       load-prefer-newer t)
 
-
-
 ;;;; APPEARANCE
 
 (setq doom-font (font-spec :family "JetBrains Mono" :size 24)
@@ -133,25 +131,6 @@
   :before #'org-roam-buffer-toggle
   (when (featurep! :ui workspaces)
     (+workspace-switch "ZK" t)))
-
-;;;; using additional packages
-;;;;
-
-(use-package! super-save
-  :config
-  (super-save-mode +1)
-  (setq super-save-auto-save-when-idle t)
-  (add-to-list 'super-save-predicates (lambda ()
-                                        (if (buffer-file-name)
-                                            (string-match-p "org" (buffer-file-name))
-                                          nil)))
-  )
-
-
-(require 'openwith)
-(openwith-mode t)
-(setq openwith-associations '(("\\.pdf\\'" "okular" (file))))
-
 
 ;;;; displaying workspaces
 (after! persp-mode

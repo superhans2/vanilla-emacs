@@ -54,7 +54,6 @@
 ;;; EMACS CONFIG 
 (use-package emacs
   :demand t
-  :ensure nil
   :init
 
   ;; using specific custom file
@@ -80,7 +79,6 @@
 ;;; KEYBINDING 
 ;;;; packages
 (use-package which-key
-  :ensure t
   :init (which-key-mode)
   :diminish which-key-mode
   :config
@@ -89,7 +87,6 @@
 
 ;;;; evil
 (use-package evil
-  :ensure t
   :init
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
@@ -128,7 +125,6 @@
 
 ;;;; bindings
 (use-package general
-  :ensure t
   :demand t
   :config
   (general-evil-setup)
@@ -263,7 +259,6 @@
 
 ;;; COMPLETION FRAMEWORK
 (use-package vertico
-  :ensure t
   :bind (:map vertico-map
          ("C-j" . vertico-next)
          ("C-k" . vertico-previous)
@@ -287,11 +282,9 @@
   (savehist-mode))
 
 (use-package consult
-  :demand t
-  :ensure t)
+  :demand t)
 
 (use-package orderless
-  :ensure t
   :custom
   (completion-styles '(orderless basic))
   (completion-category-overrides '((file (styles basic partial-completion)))))
@@ -343,7 +336,6 @@
 
 ;;;; magit
 (use-package magit
-  :ensure t
   :config
   (setq magit-display-buffer-function #'magit-display-buffer-fullframe-status-v1)
   :general
@@ -409,41 +401,13 @@
   :after (citar org-roam)
   :config (citar-org-roam-mode))
 
-(use-package openwith
-  :config
-  (setq openwith-associations
-        (list
-         (list (openwith-make-extension-regexp
-                '("pdf"))
-               "okular"
-               '(file))
-         ))
-  :init
-  (openwith-mode 1))
+
 
 
 ;;;; org journal
 
 (use-package org-journal
    :config
-  ;; (setq org-journal-dir (concat org-directory "/journal")
-  ;;       org-journal-file-type 'monthly
-  ;;       org-journal-file-format "%Y-%m.org"
-  ;;       org-journal-enable-agenda-integration nil    ;; TODO change this at some point
-  ;;       org-extend-today-until 4
-  ;;       org-journal-carryover-items ""
-  ;;       org-journal-date-format "%a, %Y-%m-%d"
-  ;;       ;; org-journal-enable-encryption t
-  ;;       org-journal-find-file #'find-file)
-
-  ;; (defun baz/org-journal-new-diary-entry ()
-  ;;   (interactive)
-  ;;   (call-interactively 'org-journal-new-entry)
-  ;;   (org-set-tags "diary"))
-
-  ;; (defun baz/org-journal-new-entry-with-tags ()
-  ;;   (call-interactively 'org-journal-new-entry)
-  ;;   (org-set-tags "diary"))
 
    ;; TODO remove this crap
   (defun baz/org-journal-narrow-today ()
@@ -469,8 +433,9 @@
 
 ;;;; org-roam 
 
+
+
 (use-package org-roam
-  :ensure t
   :custom
   (org-roam-directory org-notes)
   :general
@@ -524,24 +489,12 @@
 ;;;; org-crypt
 
 (use-package org-crypt
-  :ensure nil
   :after org
   :config
   (org-crypt-use-before-save-magic)
   (setq org-crypt-tag-matcher "crypt")
   (setq org-crypt-key "C0FC1B41A828E1FA")
   (setq auto-save-default nil))
-
-;;;; auto-saving
-(use-package super-save
-  :ensure t
-  :config
-  (super-save-mode +1)
-  (setq super-save-auto-save-when-idle t)
-  (add-to-list 'super-save-predicates (lambda ()
-					(if (buffer-file-name)
-                                            (string-match-p "org" (buffer-file-name))
-                                          nil))))
 
 ;;; modeline mode
 ;; (use-package doom-modeline
@@ -555,7 +508,6 @@
 (use-package outshine)
 
 (use-package prog-mode
-  :ensure nil
   :config
   (add-hook 'prog-mode-hook 'outshine-mode)
   (add-hook 'prog-mode-hook 'hs-minor-mode)

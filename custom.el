@@ -7,9 +7,11 @@
  '(org-link-frame-setup
    '((vm . vm-visit-folder-other-frame)
      (vm-imap . vm-visit-imap-folder-other-frame)
-     (gnus . org-gnus-no-new-news) (file . find-file)
+     (gnus . org-gnus-no-new-news)
+     (file . find-file)
      (wl . wl-other-frame)))
- '(package-selected-packages nil))
+ '(package-selected-packages
+   '(prog-mode org-crypt yasnippet which-key vertico super-save outshine org-journal org-bullets orderless openwith olivetti no-littering marginalia magit hydra general flycheck evil-collection corfu consult citar-org-roam)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
