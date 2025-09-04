@@ -63,6 +63,9 @@
 
 
 ;;;;; journal
+;;(after! org-journal
+;;  (add-to-list 'org-agenda-files (concat org-directory "/journal/")))
+
 
 (map! :leader
       ";" #'counsel-M-x
@@ -87,14 +90,9 @@
 ;;           org-roam-ui-update-on-save nil  ;; this causing serious slowdown upon saving
 ;;           org-roam-ui-open-on-start t))
 
-(setq org-roam-capture-templates
-  '(("d" "default" plain "%?"
-     :target (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
-                        "#+title: ${title}\n")
-     :unnarrowed t)))
 
-;;(after! org-roam
-;;  (setq org-roam-list-files-commands '(find fd fdfind rg)))
+(after! org-roam
+ (setq org-roam-list-files-commands '(find fd fdfind rg)))
 
 (defadvice! yeet/org-roam-in-own-workspace-a (&rest _)
   "Open all roam buffers in there own workspace."

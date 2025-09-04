@@ -22,13 +22,17 @@
   (setq olivetti-style 'fancy)
   (setq olivetti-minimum-body-width 50))
 
+
 ;;; Org
+
+;; shared variables
+(setq org-directory (concat (getenv "HOME") "/org")
+      org-notes (concat org-directory "/ZK")
+      zot-bib (concat (getenv "HOME") "/Documents/zotLib.bib"))
+
 (baz/use-package org
   ;;  :demand t
   :init
-  (setq org-directory (concat (getenv "HOME") "/org")
-        org-notes (concat org-directory "/ZK")
-        zot-bib (concat (getenv "HOME") "/Documents/zotLib.bib"))
   (setq org-auto-align-tags nil
         org-tags-column 0
         org-startup-folded "fold")
@@ -89,7 +93,7 @@
                 org-startup-with-inline-images t
                 org-image-actual-width '(300)))
 
-;;; org-journal
+;;;; org-journal
 (baz/use-package org-journal
     :init
     (setq
@@ -103,7 +107,7 @@
         org-journal-date-format "%a, %Y-%m-%d"
         org-journal-find-file #'find-file))
 
-;;; org-roam
+;;;; org-roam
 (baz/use-package org-roam
   :custom
   (org-roam-directory org-notes)
@@ -134,6 +138,8 @@
   (advice-add 'org-roam-preview-visit :before #'+org-roam-reuse-windows)
   (advice-add 'org-roam-node-visit :before #'+org-roam-reuse-windows)
 )
+
+;;;; agenda refiler
 
 ;;; supersave
 (use-package super-save
