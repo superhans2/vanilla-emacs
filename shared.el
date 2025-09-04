@@ -13,10 +13,7 @@
     `(use-package ,name ,@args)))
 
 
-;;; shared config between vanill and doom
-
-(define-key global-map (kbd "<f5>") #'modus-themes-toggle)
-
+;;; misc
 
 ;;; Olivetti
 (use-package olivetti
@@ -108,33 +105,35 @@
 
 ;;; org-roam
 (baz/use-package org-roam
-                 :custom
-                 (org-roam-directory org-notes)
-                 :bind
-                 (("C-c n l" . org-roam-buffer-toggle)
-                  ("C-c n g" . org-roam-graph)
-                  ("C-c f" . org-roam-node-find)
-                  ("C-c i" . org-roam-node-insert)
-                  ("C-c n c" . org-roam-capture))
-                 :config
-                 (org-roam-db-autosync-mode)
-                 (add-to-list 'display-buffer-alist
-                              '("\\*org-roam\\*"
-                                (display-buffer-in-direction)
-                                (direction . right)
-                                (window-width . 0.33)
-                                (window-height . fit-window-to-buffer)))
+  :custom
+  (org-roam-directory org-notes)
 
-                 ;; fixes issue where roam splits window
-                 (defun +org-roam-reuse-windows (&rest r)
-                   (when org-roam-buffer-current-node
-                     (let ((window (get-buffer-window
-                                    (get-file-buffer
-                                     (org-roam-node-file org-roam-buffer-current-node)))))
-                       (when window (select-window window))))))
+  :bind
+  (("C-c n l" . org-roam-buffer-toggle)
+  ("C-c n g" . org-roam-graph)
+  ("C-c f" . org-roam-node-find)
+  ("C-c i" . org-roam-node-insert)
+  ("C-c n c" . org-roam-capture))
 
-(advice-add 'org-roam-preview-visit :before #'+org-roam-reuse-windows)
-(advice-add 'org-roam-node-visit :before #'+org-roam-reuse-windows)
+  :config
+  (org-roam-db-autosync-mode)
+  (add-to-list 'display-buffer-alist
+              '("\\*org-roam\\*"
+              (display-buffer-in-direction)
+              (direction . right)
+              (window-width . 0.33)
+              (window-height . fit-window-to-buffer)))
+
+  ;; fixes issue where roam splits window
+  (defun +org-roam-reuse-windows (&rest r)
+    (when org-roam-buffer-current-node
+      (let ((window (get-buffer-window
+                  (get-file-buffer
+                      (org-roam-node-file org-roam-buffer-current-node)))))
+      (when window (select-window window)))))
+  (advice-add 'org-roam-preview-visit :before #'+org-roam-reuse-windows)
+  (advice-add 'org-roam-node-visit :before #'+org-roam-reuse-windows)
+)
 
 ;;; supersave
 (use-package super-save
