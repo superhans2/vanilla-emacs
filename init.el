@@ -349,8 +349,11 @@
   :hook
   (org-mode . yas-minor-mode))
 
-;;; ORG 
-;;;; general
+(unless (fboundp 'after!)
+  (defmacro after! (feature &rest body)
+    "Vanilla fallback for Doom's `after!'. Runs BODY immediately."
+    (declare (indent defun))
+    `(progn ,@body)))
 
 (load-file (expand-file-name
             "shared.el" user-emacs-directory))
@@ -370,7 +373,6 @@
     "e" '(org-edit-special :wk "edit")
     ">" '(org-demote-subtree :wk "demote subtree")
     "<" '(org-promote-subtree :wk "demote subtree"))
-
   )
 
 (load-file "/home/alex/doomemacs/modules/lang/org/autoload/org.el")
@@ -436,45 +438,13 @@
 
 
 (use-package org-roam
-  :custom
-  (org-roam-directory org-notes)
   :general
   (baz/leader-keys
    "nf" '(org-roam-node-find :wk "find roam note")
    "nl" '(org-roam-buffer-toggle :wk "toggle backlink buffer")
    "nc" '(org-roam-capture :wk "org roam capture")
    "ni" '(org-roam-node-insert :wk "org roam insert"))
-  :bind
-  (("C-c n l" . org-roam-buffer-toggle)
-   ("C-c n g" . org-roam-graph)
-   ("C-c f" . org-roam-node-find)
-   ("C-c i" . org-roam-node-insert)
-   ("C-c n c" . org-roam-capture))
-  :config
-  (org-roam-db-autosync-mode)
-  (add-to-list 'display-buffer-alist
-               '("\\*org-roam\\*"
-                 (display-buffer-in-direction)
-                 (direction . right)
-                 (window-width . 0.33)
-                 (window-height . fit-window-to-buffer)))
   )
-
-;; fixing issue where org-roam splits window
-(defun +org-roam-reuse-windows (&rest r)
-  (when org-roam-buffer-current-node
-    (let ((window (get-buffer-window
-                    (get-file-buffer
-                      (org-roam-node-file org-roam-buffer-current-node)))))
-      (when window (select-window window)))))
-
-(advice-add 'org-roam-preview-visit :before #'+org-roam-reuse-windows)
-(advice-add 'org-roam-node-visit :before #'+org-roam-reuse-windows)
-
-
-
-  ;;:before #'org-roam-preview-visit
-  ;;:before #'org-roam-node-visit
 
 ;;;; org-attach
 (setq org-attach-dir-relative t

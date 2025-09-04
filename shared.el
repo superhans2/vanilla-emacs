@@ -1,5 +1,18 @@
 ;;; shared.el -*- lexical-binding: t; -*-
 
+;;; helper config
+(defmacro baz/use-package (name &rest args)
+  "Shared `use-package` wrapper.
+- On Doom: expands to `(after! NAME (use-package! NAME ...))`
+- On vanilla: expands to `(use-package NAME ...)`"
+  (if (featurep 'doom)
+      ;; Doom: delay config until after Doom’s own
+      `(after! ,name
+         (use-package! ,name ,@args))
+    ;; Vanilla: normal use-package
+    `(use-package ,name ,@args)))
+
+
 ;;; shared config between vanill and doom
 
 (define-key global-map (kbd "<f5>") #'modus-themes-toggle)
@@ -13,7 +26,7 @@
   (setq olivetti-minimum-body-width 50))
 
 ;;; Org
-(use-package org
+(baz/use-package org
   ;;  :demand t
   :init
   (setq org-directory (concat (getenv "HOME") "/org")
@@ -80,21 +93,48 @@
                 org-image-actual-width '(300)))
 
 ;;; org-journal
-(use-package org-journal
-  :init
-  (setq
-      org-journal-dir (concat org-directory "/journal")
-      org-journal-file-type 'monthly
-      org-journal-file-format "%Y-%m.org"
-      org-journal-time-format "%R "
-      org-journal-carryover-items ""
-      org-journal-enable-agenda-integration nil
-      org-extend-today-until 4
-      org-journal-date-format "%a, %Y-%m-%d"
-      org-journal-find-file #'find-file)
-  )
+(baz/use-package org-journal
+    :init
+    (setq
+        org-journal-dir (concat org-directory "/journal")
+        org-journal-file-type 'monthly
+        org-journal-file-format "%Y-%m.org"
+        org-journal-time-format "%R "
+        org-journal-carryover-items ""
+        org-journal-enable-agenda-integration nil
+        org-extend-today-until 4
+        org-journal-date-format "%a, %Y-%m-%d"
+        org-journal-find-file #'find-file))
 
 ;;; org-roam
+(baz/use-package org-roam
+                 :custom
+                 (org-roam-directory org-notes)
+                 :bind
+                 (("C-c n l" . org-roam-buffer-toggle)
+                  ("C-c n g" . org-roam-graph)
+                  ("C-c f" . org-roam-node-find)
+                  ("C-c i" . org-roam-node-insert)
+                  ("C-c n c" . org-roam-capture))
+                 :config
+                 (org-roam-db-autosync-mode)
+                 (add-to-list 'display-buffer-alist
+                              '("\\*org-roam\\*"
+                                (display-buffer-in-direction)
+                                (direction . right)
+                                (window-width . 0.33)
+                                (window-height . fit-window-to-buffer)))
+
+                 ;; fixes issue where roam splits window
+                 (defun +org-roam-reuse-windows (&rest r)
+                   (when org-roam-buffer-current-node
+                     (let ((window (get-buffer-window
+                                    (get-file-buffer
+                                     (org-roam-node-file org-roam-buffer-current-node)))))
+                       (when window (select-window window))))))
+
+(advice-add 'org-roam-preview-visit :before #'+org-roam-reuse-windows)
+(advice-add 'org-roam-node-visit :before #'+org-roam-reuse-windows)
 
 ;;; supersave
 (use-package super-save

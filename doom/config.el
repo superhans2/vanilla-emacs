@@ -39,9 +39,7 @@
 ;;;; ORG
 
 (load-file (expand-file-name
- 	    "shared.el" "~/vanilla-emacs/"))
-
-(setq org-roam-directory org-notes)
+            "shared.el" "~/vanilla-emacs/"))
 
 (with-eval-after-load 'org
   ;; This is needed as of Org 9.2
@@ -50,7 +48,6 @@
   (add-to-list 'org-structure-template-alist '("sh" . "src shell"))
   (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
   (add-to-list 'org-structure-template-alist '("py" . "src python")))
-
 
 (map! :leader
       "x" #'org-capture
@@ -67,21 +64,6 @@
 
 ;;;;; journal
 
-(after! org-journal
-  (setq
-      org-journal-dir (concat org-directory "/journal")
-      org-journal-file-type 'monthly
-      org-journal-file-format "%Y-%m.org"
-      org-journal-time-format "%R "
-      org-journal-carryover-items ""
-      org-journal-enable-agenda-integration t
-      org-extend-today-until 4
-      org-journal-date-format "%a, %Y-%m-%d"))
-
-(global-set-key (kbd "C-c f") 'org-roam-node-find)
-(global-set-key (kbd "C-c i") 'org-roam-node-insert)
-(global-set-key (kbd "C-c I") 'org-roam-node-insert-immediate)
-
 (map! :leader
       ";" #'counsel-M-x
       ":" #'pp-eval-expression
@@ -95,15 +77,6 @@
       "o" #'olivetti-mode
       :prefix "n"
       "j" #'org-journal-new-entry)
-
-(defadvice! +org-roam-reuse-windows (&rest r)
-  :before #'org-roam-preview-visit
-  :before #'org-roam-node-visit
-  (when org-roam-buffer-current-node
-    (let ((window (get-buffer-window
-                    (get-file-buffer
-                      (org-roam-node-file org-roam-buffer-current-node)))))
-      (when window (select-window window)))))
 
 ;; (use-package! websocket :after org-roam)
 ;; (use-package! org-roam-ui
