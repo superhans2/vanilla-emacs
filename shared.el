@@ -1,9 +1,19 @@
 ;;; shared.el -*- lexical-binding: t; -*-
 
-;;; shared config between vanill and doom
+;;; helper config
+(defmacro baz/use-package (name &rest args)
+  "Shared `use-package` wrapper.
+- On Doom: expands to `(after! NAME (use-package! NAME ...))`
+- On vanilla: expands to `(use-package NAME ...)`"
+  (if (featurep 'doom)
+      ;; Doom: delay config until after Doom’s own
+      `(after! ,name
+         (use-package! ,name ,@args))
+    ;; Vanilla: normal use-package
+    `(use-package ,name ,@args)))
 
-(define-key global-map (kbd "<f5>") #'modus-themes-toggle)
 
+;;; misc
 
 ;;; Olivetti
 (use-package olivetti
@@ -12,13 +22,17 @@
   (setq olivetti-style 'fancy)
   (setq olivetti-minimum-body-width 50))
 
+
 ;;; Org
-(use-package org
+
+;; shared variables
+(setq org-directory (concat (getenv "HOME") "/org")
+      org-notes org-directory ;;(concat org-directory "/ZK")
+      zot-bib (concat (getenv "HOME") "/Documents/zotLib.bib"))
+
+(baz/use-package org
   ;;  :demand t
   :init
-  (setq org-directory (concat (getenv "HOME") "/org")
-        org-notes (concat org-directory "/ZK")
-        zot-bib (concat (getenv "HOME") "/Documents/zotLib.bib"))
   (setq org-auto-align-tags nil
         org-tags-column 0
         org-startup-folded "fold")
@@ -41,24 +55,9 @@
          (concat org-directory "/inbox.org")))
   (setq org-tag-alist '(
                         ;; ticket types
-                        ("kindling")
-                        ("recipe")
-                        ("diary")
-                        ("crypt")
-                        ("emacs")
-                        ("van")
-                        ("therapy")
-                        ("poem")
-                        ("music")
-                        ("makeup")
-                        ("linux")
-                        ("phd")
-                        ("fix")
-                        ("clothing")
-                        ("password")
-                        ("tech")
-                        ("therapy")
-                        ("bee")
+                        ("kindling") ("recipe") ("diary") ("crypt") ("emacs") ("van") ("therapy")
+                        ("poem") ("music") ("makeup") ("linux") ("phd") ("fix") ("clothing")
+                        ("password") ("tech") ("therapy") ("bee")
                         ))
 
 
@@ -67,7 +66,8 @@
 
   :config
   (setq org-agenda-custom-commands
-        '(("n" "TODOs sorted by priority (with priority only)"
+        '(
+	  ("n" "TODOs sorted by priority (with priority only)"
            ((todo "TODO" ;; "+TODO=\"TODO\"|TODO=\"WAIT\""
            ((org-agenda-sorting-strategy '(priority-down))
             (org-agenda-skip-function
@@ -76,7 +76,8 @@
             (todo "TODO"
            ((org-agenda-skip-function
              '(org-agenda-skip-entry-if 'regexp "#.")))))
-           )))
+           )
+	  ))
 
   ;; annoying problem where org-journal breaks if I don't remove trailing whitespace
   ;; doom does this automatically not clear where
@@ -94,17 +95,74 @@
                 org-startup-with-inline-images t
                 org-image-actual-width '(300)))
 
-;;; org-journal
-(use-package org-journal
+;;;; org-journal
+(baz/use-package org-journal
+    :init
+    (setq
+        org-journal-dir (concat org-directory "/journal")
+        org-journal-file-type 'monthly
+        org-journal-file-format "%Y-%m.org"
+        org-journal-time-format "%R "
+        org-journal-carryover-items ""
+        org-journal-enable-agenda-integration nil
+        org-extend-today-until 4
+        org-journal-date-format "%a, %Y-%m-%d"
+        org-journal-find-file #'find-file))
+
+;;;; org-roam
+(baz/use-package org-roam
+  :custom
+  (org-roam-directory org-notes)
+
+  :bind
+  (("C-c n l" . org-roam-buffer-toggle)
+  ("C-c n g" . org-roam-graph)
+  ("C-c f" . org-roam-node-find)
+  ("C-c i" . org-roam-node-insert)
+  ("C-c n c" . org-roam-capture))
+
+  :config
+  (org-roam-db-autosync-mode)
+  (add-to-list 'display-buffer-alist
+              '("\\*org-roam\\*"
+              (display-buffer-in-direction)
+              (direction . right)
+              (window-width . 0.33)
+              (window-height . fit-window-to-buffer)))
+
+  ;; fixes issue where roam splits window
+  (defun +org-roam-reuse-windows (&rest r)
+    (when org-roam-buffer-current-node
+      (let ((window (get-buffer-window
+                  (get-file-buffer
+                      (org-roam-node-file org-roam-buffer-current-node)))))
+      (when window (select-window window)))))
+  (advice-add 'org-roam-preview-visit :before #'+org-roam-reuse-windows)
+  (advice-add 'org-roam-node-visit :before #'+org-roam-reuse-windows)
+)
+
+;;;; agenda refiler
+
+;;; supersave
+(use-package super-save
+  :config
+  (super-save-mode +1)
+  (setq super-save-auto-save-when-idle t)
+  (add-to-list 'super-save-predicates (lambda ()
+                                        (if (buffer-file-name)
+                                            (string-match-p "org" (buffer-file-name))
+                                          nil))))
+
+
+;;; open with
+(use-package openwith
+  :config
+  (setq openwith-associations
+        (list
+         (list (openwith-make-extension-regexp
+                '("pdf"))
+               "okular"
+               '(file))
+         ))
   :init
-  (setq
-      org-journal-dir (concat org-directory "/journal")
-      org-journal-file-type 'monthly
-      org-journal-file-format "%Y-%m.org"
-      org-journal-time-format "%R "
-      org-journal-carryover-items ""
-      org-journal-enable-agenda-integration nil
-      org-extend-today-until 4
-      org-journal-date-format "%a, %Y-%m-%d"
-      org-journal-find-file #'find-file)
-  )
+  (openwith-mode 1))
