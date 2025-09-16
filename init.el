@@ -417,6 +417,10 @@
                 '("pdf"))
                "okular"
                '(file))
+	 (list (openwith-make-extension-regexp
+                '("mp4"))
+               "mpv"
+               '(file))
          ))
   :init
   (openwith-mode 1))
