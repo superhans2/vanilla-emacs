@@ -37,7 +37,7 @@
         org-tags-column 0
         org-startup-folded "fold")
   (setq org-todo-keywords
-        '((sequence "TODO(t)" "NEXT(n)" "WAIT(w)" "|" "DONE(d)" "CANCELLED")
+        '((sequence "TODO(t)" "NEXT(n)" "WAIT(w)" "SOMEDAY(s)" "|" "DONE(d)" "CANCELLED")
           (sequence "PROJ" "|" "COMPLETED")))
   (setq org-adapt-indentation nil)   ;; interacts poorly with 'evil-open-below'
   (setq org-todo-keyword-faces
@@ -47,10 +47,10 @@
           ("CANCELLED" . (:foreground "blue" :weight bold))
           ("SOMEDAY" . (:foreground "LimeGreen" :weight bold))))
 
+
   (setq org-agenda-files
         (list
          (concat org-directory "/journal/")
-         (concat org-directory "/scrap.org")
          (concat org-directory "/projects/")
          (concat org-directory "/inbox.org")))
   (setq org-tag-alist '(
@@ -65,6 +65,12 @@
   (org-mode . olivetti-mode)
 
   :config
+
+  (setq org-attach-dir-relative t
+        org-attach-store-link-p 'file
+        org-yank-dnd-method 'attach
+        org-attach-use-inheritance t)
+
   (setq org-agenda-custom-commands
         '(
 	  ("n" "TODOs sorted by priority (with priority only)"
