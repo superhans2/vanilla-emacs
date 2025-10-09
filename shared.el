@@ -65,9 +65,9 @@
   (org-mode . olivetti-mode)
 
   :config
-
   (setq org-attach-dir-relative t
         org-attach-store-link-p 'file
+        org-attach-id-dir "data/"
         org-yank-dnd-method 'attach
         org-attach-id-dir "data/"
         org-attach-use-inheritance t)
