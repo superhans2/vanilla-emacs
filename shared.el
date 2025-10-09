@@ -69,6 +69,7 @@
   (setq org-attach-dir-relative t
         org-attach-store-link-p 'file
         org-yank-dnd-method 'attach
+        org-attach-id-dir "data/"
         org-attach-use-inheritance t)
 
   (setq org-agenda-custom-commands
