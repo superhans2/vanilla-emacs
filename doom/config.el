@@ -10,9 +10,10 @@
 (setq user-full-name "Alex Hughes"
       user-mail-address "ashughes001@gmail.com"
       major-mode 'emacs-lisp-mode
-      doom-theme 'modus-operandi
+      doom-theme 'modus-vivendi-tinted
       display-line-numbers-type nil
       load-prefer-newer t)
+
 
 ;;;; APPEARANCE
 

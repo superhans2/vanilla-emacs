@@ -49,7 +49,7 @@
 (set-face-attribute 'default nil :font "JetBrains Mono" :height baz/default-font-size)
 (set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :height baz/default-font-size)
 (set-face-attribute 'variable-pitch nil :font "JetBrains Mono" :height baz/default-font-size :weight 'regular)
-(load-theme 'modus-vivendi)
+(load-theme 'modus-vivendi-tinted)
 
 ;;; EMACS CONFIG 
 (use-package emacs

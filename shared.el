@@ -13,7 +13,9 @@
     `(use-package ,name ,@args)))
 
 
-;;; misc
+;;; appearance
+(setq modus-themes-to-toggle '(modus-vivendi-tinted modus-operandi-tinted))
+(define-key global-map (kbd "<f5>") #'modus-themes-toggle)
 
 ;;; Olivetti
 (use-package olivetti
