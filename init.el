@@ -367,7 +367,6 @@
   (baz/local-leader-keys
     :keymaps 'org-mode-map
     "a" '(org-archive-subtree :wk "archive")
-    "d" '(org-decrypt-entry :wk "decrypt org entry")
     "t" '(org-todo :wk "todo")
     "s" '(org-insert-structure-template :wk "template")
     "e" '(org-edit-special :wk "edit")
@@ -471,15 +470,6 @@
   (require 'org)
   )
 
-;;;; org-crypt
-
-(use-package org-crypt
-  :after org
-  :config
-  (org-crypt-use-before-save-magic)
-  (setq org-crypt-tag-matcher "crypt")
-  (setq org-crypt-key "C0FC1B41A828E1FA")
-  (setq auto-save-default nil))
 
 ;;; modeline mode
 ;; (use-package doom-modeline

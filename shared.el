@@ -66,6 +66,11 @@
   :hook
   (org-mode . olivetti-mode)
 
+  :general
+  (:keymaps 'org-mode-map
+   :prefix "C-c"
+   "d" #'org-decrypt-entry)
+
   :config
   (setq org-attach-dir-relative t
         org-attach-store-link-p 'file
@@ -117,6 +122,15 @@
         org-extend-today-until 4
         org-journal-date-format "%a, %Y-%m-%d"
         org-journal-find-file #'find-file))
+
+;;;; org-crypt
+(baz/use-package org-crypt
+  :after org
+  :config
+  (org-crypt-use-before-save-magic)
+  (setq org-crypt-tag-matcher "crypt")
+  (setq org-crypt-key "C0FC1B41A828E1FA")
+  (setq auto-save-default nil))
 
 ;;;; org-roam
 (baz/use-package org-roam
