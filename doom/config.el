@@ -93,7 +93,8 @@
 
 
 (after! org-roam
- (setq org-roam-list-files-commands '(find fd fdfind rg)))
+ (setq org-roam-list-files-commands '(find fd fdfind rg))
+ (setq org-roam-completion-everywhere '()))
 
 ;; (defadvice! yeet/org-roam-in-own-workspace-a (&rest _)
 ;;   "Open all roam buffers in there own workspace."
