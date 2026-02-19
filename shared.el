@@ -59,7 +59,7 @@
                         ;; ticket types
                         ("kindling") ("recipe") ("diary") ("crypt") ("emacs") ("van") ("therapy")
                         ("poem") ("music") ("makeup") ("linux") ("phd") ("fix") ("clothing")
-                        ("password") ("tech") ("therapy") ("bee")
+                        ("password") ("tech") ("therapy") 
                         ))
 
 
@@ -80,18 +80,22 @@
         org-attach-use-inheritance t)
 
   (setq org-agenda-custom-commands
-        '(
+        '(("p" "PhD tasks" tags-todo "+phd")
+          ("e" "emacs tasks" tags-todo "+emacs")
+          ("r" "recipes" tags "+recipe")
+
+          ;; more complex block queries 
 	  ("n" "TODOs sorted by priority (with priority only)"
            ((todo "TODO" ;; "+TODO=\"TODO\"|TODO=\"WAIT\""
-           ((org-agenda-sorting-strategy '(priority-down))
-            (org-agenda-skip-function
-             '(org-agenda-skip-entry-if 'notregexp "#."))))
+                  ((org-agenda-sorting-strategy '(priority-down))
+                   (org-agenda-skip-function
+                    '(org-agenda-skip-entry-if 'notregexp "#."))))
             (todo "WAIT")
             (todo "TODO"
-           ((org-agenda-skip-function
-             '(org-agenda-skip-entry-if 'regexp "#.")))))
-           )
+                  ((org-agenda-skip-function
+                    '(org-agenda-skip-entry-if 'regexp "#."))))))
 	  ))
+
 
   ;; annoying problem where org-journal breaks if I don't remove trailing whitespace
   ;; doom does this automatically not clear where
