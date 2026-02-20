@@ -54,4 +54,6 @@
 (package! super-save)
 (package! openwith)
 (package! olivetti)
+(package! modus-themes)
+
 ;; (package! citar-org-roam)

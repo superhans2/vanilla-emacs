@@ -64,8 +64,8 @@
 
 
 ;;;;; journal
-;;(after! org-journal
-;;  (add-to-list 'org-agenda-files (concat org-directory "/journal/")))
+(after! org-journal
+  (add-to-list 'org-agenda-files (concat org-directory "/journal/")))
 
 
 (map! :leader
@@ -77,7 +77,8 @@
       "r" #'org-roam-buffer-toggle
       "t" #'org-roam-tag-add
       :prefix "t"
-      "t" #'tab-bar-mode
+      :desc "tab bar toggle" "t" #'tab-bar-mode
+      :desc "pomodoro timer" "p" #'org-pomodoro
       "o" #'olivetti-mode
       :prefix "n"
       "j" #'org-journal-new-entry)
@@ -93,7 +94,8 @@
 
 
 (after! org-roam
- (setq org-roam-list-files-commands '(find fd fdfind rg)))
+ (setq org-roam-list-files-commands '(find fd fdfind rg))
+ (setq org-roam-completion-everywhere '()))
 
 ;; (defadvice! yeet/org-roam-in-own-workspace-a (&rest _)
 ;;   "Open all roam buffers in there own workspace."
