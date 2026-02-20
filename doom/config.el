@@ -19,8 +19,8 @@
 
 (setq doom-font (font-spec :family "JetBrains Mono" :size 24)
     doom-big-font (font-spec :family "JetBrains Mono" :size 36)
-    doom-variable-pitch-font (font-spec :family "JetBrains Mono" :size 24)
-    doom-variable-pitch-font (font-spec :family "Roboto" :size 20)
+    ;;doom-variable-pitch-font (font-spec :family "JetBrains Mono" :size 24)
+    doom-variable-pitch-font (font-spec :family "Roboto" :size 26)
     doom-unicode-font (font-spec :family "JuliaMono")
     doom-serif-font (font-spec :family "IBM Plex Mono" :weight 'light))
 

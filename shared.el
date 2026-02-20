@@ -136,6 +136,7 @@
 (baz/use-package org-roam
   :custom
   (org-roam-directory org-notes)
+  (org-roam-completion-everywhere nil)
 
   :bind
   (("C-c n l" . org-roam-buffer-toggle)
