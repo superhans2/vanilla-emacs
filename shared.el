@@ -68,10 +68,13 @@
                         ("emacs")
                         ("linux")
                         ("STU")
+                        ("trans")
 
                         ;; ones that are not meant to be todo items
                         ("makeup")
                         ("poem")
+                        ("art")
+                        ("book")
                         ("music")
                         ("kindling")
                         ("recipe")
@@ -93,6 +96,9 @@
   (:keymaps 'org-mode-map
    :prefix "C-c"
    "d" #'org-decrypt-entry)
+  (:keymaps 'org-agenda-mode-map
+            "s/" '(org-agenda-filter :wk "filter")
+            "sp" '(baz/org-agenda-filter-no-priority-c :wk "filter out low priority"))
 
   :config
   (setq org-attach-dir-relative t
@@ -104,12 +110,13 @@
 
   (setq org-agenda-custom-commands
         '(("p" "PhD tasks" tags-todo "+phd")
-          ("e" "emacs tasks" tags-todo "+emacs")
+          ("e" "emacs tasks" tags-todo "+emacs|+linux|+computer")
           ("r" "recipes" tags "+recipe")
 
-          ("x" "TODOs excluding emacs & phd" tags-todo "-emacs-phd")
+          ("n" "TODOs excluding emacs & phd" tags-todo "+TODO=\"TODO\"-computer-linux-emacs-phd")
+
           ;; more complex block queries 
-	  ("n" "TODOs sorted by priority"
+	  ("xp" "TODOs sorted by priority"
            ((todo "TODO" ;; "+TODO=\"TODO\"|TODO=\"WAIT\""
                   ((org-agenda-sorting-strategy '(priority-down))
                    (org-agenda-skip-function
@@ -119,6 +126,15 @@
                   ((org-agenda-skip-function
                     '(org-agenda-skip-entry-if 'regexp "#."))))))
 	  ))
+
+  ;; a custom org-agenda regex filter to remove #C entries
+  (defun baz/org-agenda-filter-no-priority-c ()
+    "Filter agenda to exclude [#C] priority items."
+    (interactive)
+    ;; TODO have it so it automatically is applying the #C not waiting for user to type this
+    (let ((current-prefix-arg '(4)))  
+      (call-interactively #'org-agenda-filter-by-regexp))
+    )
 
 
   ;; annoying problem where org-journal breaks if I don't remove trailing whitespace
