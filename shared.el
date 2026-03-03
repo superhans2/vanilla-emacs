@@ -111,11 +111,17 @@
   (setq org-agenda-custom-commands
         '(("p" "PhD tasks" tags-todo "+phd")
           ("e" "emacs tasks" tags-todo "+emacs|+linux|+computer")
-          ("r" "recipes" tags "+recipe")
-
           ("n" "TODOs excluding emacs & phd" tags-todo "+TODO=\"TODO\"-computer-linux-emacs-phd")
+          ("r" "recipes" tags "+recipe")
+          ("h" "house tasks" tags-todo "+house")
 
-          ;; more complex block queries 
+          ("o" . "restricts to a tag")
+          ("or" "recipes" tags "+recipe")
+          ("os" "shopping" tags-todo "+shop")
+          ("of" "finance" tags-todo "+finance")
+
+          ;; more complex block queries
+          ("x" . "Experimental")
 	  ("xp" "TODOs sorted by priority"
            ((todo "TODO" ;; "+TODO=\"TODO\"|TODO=\"WAIT\""
                   ((org-agenda-sorting-strategy '(priority-down))
