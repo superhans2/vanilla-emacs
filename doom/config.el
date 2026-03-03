@@ -80,6 +80,8 @@
       :desc "tab bar toggle" "t" #'tab-bar-mode
       :desc "pomodoro timer" "p" #'org-pomodoro
       "o" #'olivetti-mode
+      :prefix "o"
+      :desc "org-agenda" "a" 'org-agenda
       :prefix "n"
       "j" #'org-journal-new-entry)
 

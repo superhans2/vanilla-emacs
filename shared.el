@@ -55,12 +55,35 @@
          (concat org-directory "/journal/")
          (concat org-directory "/projects/")
          (concat org-directory "/inbox.org")))
+
   (setq org-tag-alist '(
-                        ;; ticket types
-                        ("kindling") ("recipe") ("diary") ("crypt") ("emacs") ("van") ("therapy")
-                        ("poem") ("music") ("makeup") ("linux") ("phd") ("fix") ("clothing")
-                        ("password") ("tech") ("therapy") 
+                        ;; todo tag types
+                        ("van")
+                        ("finance")
+                        ("shop")
+                        ("phd")
+                        ("fix")
+                        ("house")
+                        ("computer")
+                        ("emacs")
+                        ("linux")
+                        ("STU")
+
+                        ;; ones that are not meant to be todo items
+                        ("makeup")
+                        ("poem")
+                        ("music")
+                        ("kindling")
+                        ("recipe")
+                        ("diary")
+                        ("crypt")
+                        ("dreams")
+                        ("clothing")
+                        ("password")
+                        ("therapy") 
                         ))
+
+
 
 
   :hook
@@ -84,8 +107,9 @@
           ("e" "emacs tasks" tags-todo "+emacs")
           ("r" "recipes" tags "+recipe")
 
+          ("x" "TODOs excluding emacs & phd" tags-todo "-emacs-phd")
           ;; more complex block queries 
-	  ("n" "TODOs sorted by priority (with priority only)"
+	  ("n" "TODOs sorted by priority"
            ((todo "TODO" ;; "+TODO=\"TODO\"|TODO=\"WAIT\""
                   ((org-agenda-sorting-strategy '(priority-down))
                    (org-agenda-skip-function
