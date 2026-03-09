@@ -55,5 +55,9 @@
 (package! openwith)
 (package! olivetti)
 (package! modus-themes)
+(package! org-pandoc-import
+  :recipe (:host github
+           :repo "tecosaur/org-pandoc-import"
+           :files ("*.el" "filters" "preprocessors")))
 
 ;; (package! citar-org-roam)

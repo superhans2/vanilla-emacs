@@ -71,6 +71,8 @@
                         ("trans")
 
                         ;; ones that are not meant to be todo items
+                        ("org")
+                        ("chatgpt")
                         ("makeup")
                         ("poem")
                         ("art")
@@ -215,6 +217,14 @@
   (advice-add 'org-roam-node-visit :before #'+org-roam-reuse-windows)
 )
 
+;;;; org-pandoc-import
+;; (package! org-pandoc-import
+;;   :recipe (:host github
+;;            :repo "tecosaur/org-pandoc-import"
+;;            :files ("*.el" "filters" "preprocessors")))
+
+;; TODO might break in vanilla
+(baz/use-package org-pandoc-import :after org)
 ;;;; agenda refiler
 
 ;;; supersave
