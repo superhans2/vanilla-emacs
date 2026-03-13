@@ -113,7 +113,7 @@
   (setq org-agenda-custom-commands
         '(("p" "PhD tasks" tags-todo "+phd")
           ("e" "emacs tasks" tags-todo "+emacs|+linux|+computer")
-          ("n" "TODOs excluding emacs & phd" tags-todo "+TODO=\"TODO\"-computer-linux-emacs-phd")
+          ("n" "TODOs excluding emacs & phd" tags-todo "+TODO=\"TODO\"-computer-linux-emacs-phd-org")
           ("r" "recipes" tags "+recipe")
           ("h" "house tasks" tags-todo "+house")
 

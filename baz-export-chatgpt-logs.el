@@ -18,7 +18,7 @@
          (journal_file_path (expand-file-name journal_file_name org-journal-dir)))
     journal_file_path))
 
-(baz/get-top-level-heading "~/org/journal/2026-04.org" "2026-04-01")
+;; (baz/get-top-level-heading "~/org/journal/2026-04.org" "2026-04-01")
 
 (defun baz/get-top-level-heading-pos (journal-file-path date)
   "Gets the position of the top level heading with a matching regexp"
@@ -61,15 +61,19 @@
 
 (defun baz/convert-md-to-org-then-refile ()
   "
-- From within a chatgpt markdown file this will convert to org, go to the top of the file, add a tag and then refile to the correct location
+From within a chatgpt markdown file this will convert to org,
+go to the top of the file, add a tag and then refile to the correct location
 "
-  (call-interactively 'org-pandoc-import-as-org)
-  (goto-char (point-min))
-  (org-set-tags ":chatgpt:")
-)
-
-
-  ;;(baz/refile-to-target)
+  (call-interactively 'org-pandoc-import-to-org)
+  (sleep-for 1)
+  (let ((org-file-path (concat (substring (buffer-file-name) 0 -3) ".org")))
+    (message org-file-path)
+    (find-file org-file-path)
+    (goto-char (point-min))
+    (org-toggle-tag "chatgpt" 'on)
+    (baz/refile-to-target)
+    )
+  )
 
 (provide 'baz-export-chatgpt-logs)
 ;;; baz-export-chatgpt-logs.el ends here
